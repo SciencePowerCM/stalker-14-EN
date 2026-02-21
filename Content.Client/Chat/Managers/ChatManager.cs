@@ -31,6 +31,11 @@ internal sealed class ChatManager : IChatManager
         // See server-side manager. This just exists for shared code.
     }
 
+    public void SendAdminAlertNoFormatOrEscape(string message)
+    {
+        // See server-side manager. This just exists for shared code.
+    }
+
     public void SendMessage(string text, ChatSelectChannel channel)
     {
         var str = text.ToString();
@@ -75,6 +80,10 @@ internal sealed class ChatManager : IChatManager
 
             case ChatSelectChannel.Whisper:
                 _consoleHost.ExecuteCommand($"whisper \"{CommandParsing.Escape(str)}\"");
+                break;
+
+            case ChatSelectChannel.Narration:
+                _consoleHost.ExecuteCommand($"narrate \"{CommandParsing.Escape(str)}\"");
                 break;
 
             default:

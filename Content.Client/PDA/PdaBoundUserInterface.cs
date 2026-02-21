@@ -1,4 +1,5 @@
 using Content.Client.CartridgeLoader;
+using Content.Shared._Stalker_EN.PDA.Ringer;
 using Content.Shared.CartridgeLoader;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.PDA;
@@ -30,8 +31,7 @@ namespace Content.Client.PDA
 
         private void CreateMenu()
         {
-            _menu = this.CreateWindow<PdaMenu>();
-            _menu.OpenCenteredLeft();
+            _menu = this.CreateWindowCenteredLeft<PdaMenu>();
 
             _menu.FlashLightToggleButton.OnToggled += _ =>
             {
@@ -61,6 +61,11 @@ namespace Content.Client.PDA
             _menu.AccessRingtoneButton.OnPressed += _ =>
             {
                 SendMessage(new PdaShowRingtoneMessage());
+            };
+
+            _menu.SilentModeButton.OnPressed += _ =>
+            {
+                SendMessage(new STPdaToggleSilentModeMessage());
             };
 
             _menu.ShowUplinkButton.OnPressed += _ =>

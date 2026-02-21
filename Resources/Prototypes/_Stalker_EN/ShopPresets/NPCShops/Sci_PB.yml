@@ -1,6 +1,8 @@
 - type: shopPreset
   id: NpcSciPBEN # 1.25x - Pending Economy Change
+  minSellPrice: 5
   itemsForSale:
+
     # Thermal group - 1
     ZoneArtifactFireball: 680
     ZoneArtifactEye: 1020
@@ -73,6 +75,18 @@
     MutantPartChimeraTooth: 1000
     ClothingMaskChimera: 1 # its gross why would they want it
     MutantPartIzlomArm: 1150
+
+    #Fish -------- Unc * 1.5
+    #Only anomalous fish
+    STFishGoldfish: 1500
+    STFishLuminantGudgeon: 450
+    STFishSwiftLurker: 375
+    STFishDenseTench: 375
+    STFishSneakyTench: 375
+    STFishFlish: 300
+    STFishDoubleEel: 725
+    STFishJellyfish: 1125
+    STFishPallidSturgeon: 2250 # might be a bit too high but also these things suck to carry so...
 
     #Other
     STJunkHardDrive: 100

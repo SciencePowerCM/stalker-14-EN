@@ -6,6 +6,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Hands;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
@@ -65,17 +66,36 @@ public abstract partial class STSharedScopeSystem : EntitySystem
             return;
         }
 
-        if (!TryComp(entity, out entity.Comp))
-            entity.Comp = EnsureComp<ScopeComponent>(entity);
+        var isNewComponent = !TryComp<ScopeComponent>(entity, out var comp);
 
-        entity.Comp.Zoom = scopeEffect.Zoom;
-        entity.Comp.AllowMovement = scopeEffect.AllowMovement;
-        entity.Comp.Offset = scopeEffect.Offset;
-        entity.Comp.Delay = scopeEffect.Delay;
-        entity.Comp.RequireWielding = scopeEffect.RequireWielding;
-        entity.Comp.UseInHand = scopeEffect.UseInHand;
+        if (isNewComponent)
+            comp = EnsureComp<ScopeComponent>(entity);
 
-        Dirty(entity);
+        // comp is guaranteed non-null after above logic
+        comp!.Zoom = scopeEffect.Zoom;
+        comp.AllowMovement = scopeEffect.AllowMovement;
+        comp.Offset = scopeEffect.Offset;
+        comp.Delay = scopeEffect.Delay;
+        comp.RequireWielding = scopeEffect.RequireWielding;
+        comp.UseInHand = scopeEffect.UseInHand;
+
+        // Ensure action is created when component is dynamically added
+        // (MapInitEvent doesn't fire for existing entities)
+        if (isNewComponent)
+        {
+            _actionContainer.EnsureAction(entity.Owner, ref comp.ScopingToggleActionEntity, comp.ScopingToggleAction);
+
+            // If weapon is currently held, grant action to holder immediately
+            // (GetItemActionsEvent won't fire since item is already equipped)
+            if (comp.ScopingToggleActionEntity is { } actionEntity &&
+                _container.TryGetContainingContainer((entity.Owner, null), out var container) &&
+                _hands.IsHolding(container.Owner, entity.Owner))
+            {
+                _actionsSystem.AddAction(container.Owner, actionEntity, entity.Owner);
+            }
+        }
+
+        Dirty(entity.Owner, comp);
     }
 
     private void OnMapInit(Entity<ScopeComponent> ent, ref MapInitEvent args)
@@ -86,11 +106,20 @@ public abstract partial class STSharedScopeSystem : EntitySystem
 
     private void OnShutdown(Entity<ScopeComponent> ent, ref ComponentRemove args)
     {
-        if (ent.Comp.User is not { } user)
-            return;
+        // If someone is using the scope, stop them first
+        if (ent.Comp.User is { } user)
+        {
+            Unscope(ent);
+            _actionsSystem.RemoveProvidedActions(user, ent.Owner);
+        }
 
-        Unscope(ent);
-        _actionsSystem.RemoveProvidedActions(user, ent.Owner);
+        // ALWAYS delete the action entity when component is removed
+        // This prevents orphaned actions that cause issues on re-attach
+        if (ent.Comp.ScopingToggleActionEntity is { } actionEntity)
+        {
+            Del(actionEntity);
+            ent.Comp.ScopingToggleActionEntity = null;
+        }
     }
 
     private void OnScopeEntityTerminating(Entity<ScopeComponent> ent, ref EntityTerminatingEvent args)
@@ -259,6 +288,17 @@ public abstract partial class STSharedScopeSystem : EntitySystem
         scoping.Scope = scope;
         scoping.AllowMovement = scope.Comp.AllowMovement;
         Dirty(user, scoping);
+
+        // MoveInputEvent only fires on input state change, so if the player begins
+        // holding movement keys near the end of the DoAfter, the event fires before
+        // ScopingComponent exists and the movement goes undetected.
+        if (!scoping.AllowMovement &&
+            TryComp<InputMoverComponent>(user, out var mover) &&
+            (mover.HeldMoveButtons & MoveButtons.AnyDirection) != MoveButtons.None)
+        {
+            UserStopScoping((user, scoping));
+            return;
+        }
 
         var targetOffset = GetScopeOffset(scope, direction);
         scoping.EyeOffset = targetOffset;

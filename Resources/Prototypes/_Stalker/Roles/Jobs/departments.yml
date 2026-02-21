@@ -7,6 +7,7 @@
   roles:
   - Stalker
   - StalkerNeutral
+  - StalkerRookie
 
 # - type: department
 #   id: StalkerDisabled
@@ -84,8 +85,9 @@
   - Military
   - MilitaryOfficer
   - MilitaryHead
-  - StalkerScientist
-  - StalkerHeadScientist
+  - sci
+  - sci_decan
+  - sci_rector
 
 - type: department
   id: StalkerUnitedNations

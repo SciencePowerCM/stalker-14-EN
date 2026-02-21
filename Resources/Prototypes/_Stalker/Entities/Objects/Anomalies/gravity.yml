@@ -33,7 +33,7 @@
       detectedLevel: 1
       activationDelay: 10
       preparingDelay: 0
-      chargeTime: 5
+      chargingTime: 5
     - type: Sprite
       sprite: _Stalker/Objects/Anomalies/gravi.rsi
       layers:
@@ -49,7 +49,7 @@
     - type: AmbientSound
       enabled: true
       volume: -5
-      range: 3
+      range: 4
       sound:
         path: /Audio/_Stalker/Effects/anomaly_gravy_idle.ogg
     - type: ZoneArtifactSpawner
@@ -86,12 +86,12 @@
     - type: Stealth
     - type: ZoneAnomalyEffectStealth
       idle: -0.3
-      activated: 1
+      activated: 1.0
     - type: ZoneAnomaly
       detectedLevel: 2
       activationDelay: 12
       preparingDelay: 0
-      chargeTime: 7
+      chargingTime: 7
     - type: Sprite
       sprite: _Stalker/Objects/Anomalies/grabber.rsi
       layers:
@@ -107,7 +107,7 @@
     - type: AmbientSound
       enabled: true
       volume: -5
-      range: 7
+      range: 8
       sound:
         path: /Audio/_Stalker/Effects/anomaly_gravy_idle.ogg
     - type: Fixtures
@@ -123,6 +123,7 @@
           layer:
             - MobLayer
             - LowImpassable
+            - HighImpassable
     - type: ZoneArtifactSpawner
       artifacts:
       - id: null
@@ -167,7 +168,7 @@
       detectedLevel: 0
       activationDelay: 0
       preparingDelay: 0
-      chargeTime: 3
+      chargingTime: 3
     - type: Sprite
       sprite: _Stalker/Objects/Anomalies/springobard.rsi
       layers:
@@ -221,7 +222,7 @@
       detectedLevel: 4
       activationDelay: 1
       preparingDelay: 0
-      chargeTime: 5
+      chargingTime: 5
     - type: Sprite
       sprite: _Stalker/Objects/Anomalies/springobard.rsi
       layers:
@@ -264,7 +265,7 @@
           - ZoneAnomalyEffectInversionIgnore
       activationDelay: 0
       preparingDelay: 0
-      chargeTime: 0
+      chargingTime: 0
       detectedLevel: 4
     - type: Fixtures
       fixtures:
@@ -280,6 +281,7 @@
           layer:
             - MobLayer
             - LowImpassable
+            - HighImpassable
     - type: ZoneArtifactSpawner
       artifacts:
         - id: null
@@ -315,6 +317,7 @@
           layer:
             - MobLayer
             - LowImpassable
+            - HighImpassable
     - type: ZoneArtifactSpawner
       artifacts:
       - id: null
@@ -350,6 +353,7 @@
           layer:
             - MobLayer
             - LowImpassable
+            - HighImpassable
     - type: ZoneArtifactSpawner
       artifacts:
         - id: null
@@ -366,3 +370,4 @@
         - id: ZoneArtifactStoneCube
           tier: 3
           ratio: 10
+

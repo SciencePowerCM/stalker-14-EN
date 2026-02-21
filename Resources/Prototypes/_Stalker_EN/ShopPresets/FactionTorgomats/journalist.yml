@@ -1,5 +1,6 @@
 - type: shopPreset
   id: JournalistShopPreset # 0x
+  minSellPrice: 5
   categories:
     - name: shop-category-weapons
       priority: 1
@@ -58,6 +59,7 @@
       items:
         STCombatKnife: 50
         BaseRadio: 50
+        STRadioHeadset: 150
         STFlashlightSeclite: 50
         PowerCellHyper: 35
         HandheldGPSBasic: 35
@@ -70,5 +72,6 @@
         BoxFolderWhite: 500
         BoxFolderBlack: 500
         STElasticRubberRed: 50
-        STElasticRubberGreen: 50 
+        STElasticRubberGreen: 50
         STElasticRubberBlue: 50
+        FoldedFlagHelper: 250

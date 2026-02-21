@@ -16,6 +16,9 @@
       - cash
       - cash_10
       - cash_100
+      layerFunction: Threshold
+    - type: StackLayerThreshold
+      thresholds: [10, 100]
     - type: Sprite
       sprite: _Stalker_EN/Objects/Economy/hryvnia.rsi
       state: cash
@@ -45,17 +48,16 @@
 
 - type: currency
   id: Hryvnias
-  displayName: Hryvnias
+  displayName: store-currency-display-hryvnias
   cash:
     1: Hryvnias
   canWithdraw: true
 
 - type: stack
   id: Hryvnias
-  name: Hryvnias
+  name: stack-hryvnias
   icon: { sprite: /Textures/_Stalker_EN/Objects/Economy/hryvnia.rsi, state: cash }
   spawn: Hryvnias
-  itemSize: 1
   splitAmounts: [1, 5, 10, 25, 50, 100, 500]
 
 - type: entity

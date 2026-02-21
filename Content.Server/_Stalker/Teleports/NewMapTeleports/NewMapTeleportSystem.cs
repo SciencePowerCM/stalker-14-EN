@@ -18,11 +18,14 @@ using Content.Shared.Popups;
 using Content.Shared.Teleportation.Components;
 using Content.Shared.Teleportation.Systems;
 using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Robust.Shared.Utility;
 using Content.Shared.Players.PlayTimeTracking;
 
 namespace Content.Server._Stalker.Teleports.NewMapTeleports;
@@ -40,7 +43,6 @@ public sealed class NewMapTeleportSystem : SharedTeleportSystem
     [Dependency] private readonly SharedGodmodeSystem _godmode = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
     [Dependency] private readonly ILogManager _logManager = default!;
-    [Dependency] private readonly LinkedEntitySystem _linkedEntitySystem = default!;
     [Dependency] private readonly PlayTimeTrackingManager _playTimeTrackingManager = default!;
     [Dependency] private readonly MindSystem _mindSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -70,9 +72,9 @@ public sealed class NewMapTeleportSystem : SharedTeleportSystem
         }
 #endif
 
+        UpdateLinks();
         var ev = new MapsLoadedEvent();
         RaiseLocalEvent(ref ev);
-        UpdateLinks();
     }
 
     private void UpdateLinks()
@@ -119,28 +121,32 @@ public sealed class NewMapTeleportSystem : SharedTeleportSystem
 
     private void LoadMap(string path)
     {
-        var map = _mapSystem.CreateMap(out var mapId);
-        if (_mapLoader.TryLoad(mapId, path, out _) && !_mapSystem.IsInitialized(mapId))
-        {
-            _mapSystem.InitializeMap(mapId);
-        }
-        if (_mapSystem.IsPaused(mapId))
-        {
-            _mapSystem.SetPaused(mapId, false);
-        }
-        if (!_mapSystem.IsInitialized(mapId))
-            _sawmill.Error($"Map with id {mapId} from {path} load failed.");
+        _mapLoader.TryLoadMap(new ResPath(path), out _, out _, DeserializationOptions.Default with { InitializeMaps = true });
     }
     private void OnStartCollide(EntityUid uid, NewMapTeleportComponent component, ref StartCollideEvent args)
     {
+        if (component.IsCollisionDisabled)
+            return;
+        var subject = args.OtherEntity;
+
+        // stalker-changes: Check NoobDenyer before access so Rookies get a helpful message instead of silent denial
+        if (HasComp<NoobDenyerComponent>(uid) && TryComp<ActorComponent>(subject, out var actorComponent))
+        {
+            var session = actorComponent.PlayerSession;
+            var playtime = _playTimeTrackingManager.GetOverallPlaytime(session).TotalHours;
+
+            if (playtime < 10)
+            {
+                _popup.PopupEntity("As a Rookie, you cannot teleport to Bar yet. Follow the arrows on the floor to Rookie Village.", subject);
+                return;
+            }
+        }
+
         if (!component.AllowAll)
         {
             if (!_accessReaderSystem.IsAllowed(args.OtherEntity, args.OurEntity))
                 return;
         }
-        if (component.IsCollisionDisabled)
-            return;
-        var subject = args.OtherEntity;
 
         // If there is a timeout on a person we just return out of a function not to teleport that entity back.
         if (TryComp<PortalTimeoutComponent>(subject, out var timeoutComponent) && component.CooldownEnabled && timeoutComponent.Cooldown != null)
@@ -154,18 +160,6 @@ public sealed class NewMapTeleportSystem : SharedTeleportSystem
         if (_pulling.IsPulling(subject) || _pulling.IsPulled(subject))
             return;
 
-        if (HasComp<NoobDenyerComponent>(uid) && TryComp<ActorComponent>(subject, out var actorComponent))
-        {
-            var session = actorComponent.PlayerSession;
-            var playtime = _playTimeTrackingManager.GetOverallPlaytime(session).TotalHours;
-
-            if (playtime < 2)
-            {
-                _popup.PopupEntity("You need at least 2 hours of playtime to go to Bar. Follow the arrows on the floor to Rookie Village.", subject);
-                return;
-            }
-        }
-
         // If there are no linked entity - link one
         if (!TryComp<LinkedEntityComponent>(uid, out var link))
         {
@@ -178,7 +172,7 @@ public sealed class NewMapTeleportSystem : SharedTeleportSystem
                 if (local.PortalName != component.PortalName || uid == ent)
                     continue;
 
-                _linkedEntitySystem.TryLink(uid, ent, true);
+                _link.TryLink(uid, ent, true);
             }
         }
 

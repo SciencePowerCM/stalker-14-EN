@@ -13,6 +13,7 @@
         - type: StationJobs
           availableJobs:
             Stalker: [ 0, -1 ]
+            StalkerRookie: [ 0, -1 ]
             StalkerRene: [ 0, -1 ]
             StalkerHeadRene: [ 0, -1 ]
             StalkerGreh: [ 0, -1 ]
@@ -24,8 +25,9 @@
             StalkerPostulant: [ 0, -1 ]
             StalkerBishop: [ 0, -1 ]
             # Science
-            StalkerScientist: [ 0, -1 ]
-            StalkerHeadScientist: [ 0, -1 ]
+            sci: [ 0, -1 ]
+            sci_decan: [ 0, -1 ]
+            sci_rector: [ 0, -1 ]
             # Military
             Military: [ 0, -1 ]
             MilitaryOfficer: [ 0, -1 ]

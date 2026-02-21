@@ -1,4 +1,4 @@
-﻿using Content.Shared._RMC14.CCVar;
+using Content.Shared._RMC14.CCVar;
 using Content.Shared.CombatMode;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Configuration;

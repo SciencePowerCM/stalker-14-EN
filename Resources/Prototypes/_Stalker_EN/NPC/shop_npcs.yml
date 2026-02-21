@@ -10,8 +10,9 @@
     state: unc
   - type: Physics
     bodyType: Static
-  - type: Advertise
-    pack: NPCStalkerUncleAds
+  - type: Vocalizer
+  - type: DatasetVocalizer
+    dataset: NPCStalkerUncleAds
   - type: ActivatableUI
     key: enum.ShopUiKey.Key
     singleUser: true
@@ -50,8 +51,8 @@
     state: alive-1
   - type: Physics
     bodyType: Static
-  - type: Advertise
-    pack: NPCStalkerMeatAds
+  - type: DatasetVocalizer
+    dataset: NPCStalkerMeatAds
   - type: ActivatableUI
     key: enum.ShopUiKey.Key
     singleUser: true

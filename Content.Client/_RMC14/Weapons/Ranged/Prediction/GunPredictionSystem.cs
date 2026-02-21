@@ -1,14 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Client.Projectiles;
 using Content.Shared._RMC14.Weapons.Ranged.Prediction;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Ranged.Events;
-using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Client.GameObjects;
 using Robust.Client.Physics;
 using Robust.Client.Player;
-using Robust.Shared;
-using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
@@ -19,28 +16,28 @@ namespace Content.Client._RMC14.Weapons.Ranged.Prediction;
 
 public sealed class GunPredictionSystem : SharedGunPredictionSystem
 {
-    [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly SharedGunSystem _gun = default!;
-    [Dependency] private readonly PhysicsSystem _physics = default!;
+    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly ProjectileSystem _projectile = default!;
+    [Dependency] private readonly SpriteSystem _sprite = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
-    private EntityQuery<IgnorePredictionHideComponent> _ignorePredictionHideQuery = default!;
-    private EntityQuery<SpriteComponent> _spriteQuery = default!;
+    private EntityQuery<IgnorePredictionHideComponent> _ignorePredictionHideQuery;
+    private EntityQuery<IgnorePredictionHitComponent> _ignorePredictionHitQuery;
+    private EntityQuery<SpriteComponent> _spriteQuery;
 
     public override void Initialize()
     {
         base.Initialize();
 
         _ignorePredictionHideQuery = GetEntityQuery<IgnorePredictionHideComponent>();
+        _ignorePredictionHitQuery = GetEntityQuery<IgnorePredictionHitComponent>();
         _spriteQuery = GetEntityQuery<SpriteComponent>();
 
         SubscribeLocalEvent<PhysicsUpdateBeforeSolveEvent>(OnBeforeSolve);
         SubscribeLocalEvent<PhysicsUpdateAfterSolveEvent>(OnAfterSolve);
         SubscribeLocalEvent<RequestShootEvent>(OnShootRequest);
-        SubscribeNetworkEvent<MaxLinearVelocityMsg>(OnLinearVelocityMsg);
 
         SubscribeLocalEvent<PredictedProjectileClientComponent, UpdateIsPredictedEvent>(OnClientProjectileUpdateIsPredicted);
         SubscribeLocalEvent<PredictedProjectileClientComponent, StartCollideEvent>(OnClientProjectileStartCollide);
@@ -66,7 +63,6 @@ public sealed class GunPredictionSystem : SharedGunPredictionSystem
         var query = EntityQueryEnumerator<PredictedProjectileClientComponent>();
         while (query.MoveNext(out var uid, out var predicted))
         {
-
             if (predicted.Coordinates is { } coordinates)
                 _transform.SetCoordinates(uid, coordinates);
 
@@ -76,15 +72,7 @@ public sealed class GunPredictionSystem : SharedGunPredictionSystem
 
     private void OnShootRequest(RequestShootEvent ev, EntitySessionEventArgs args)
     {
-        if (_timing.IsFirstTimePredicted)
-            return;
-
         ShootRequested(ev.Gun, ev.Coordinates, ev.Target, null, args.SenderSession);
-    }
-
-    private void OnLinearVelocityMsg(MaxLinearVelocityMsg ev)
-    {
-        _config.SetCVar(CVars.MaxLinVelocity, ev.Velocity);
     }
 
     private void OnClientProjectileUpdateIsPredicted(Entity<PredictedProjectileClientComponent> ent, ref UpdateIsPredictedEvent args)
@@ -98,7 +86,8 @@ public sealed class GunPredictionSystem : SharedGunPredictionSystem
             return;
 
         if (!TryComp(ent, out ProjectileComponent? projectile) ||
-            !TryComp(ent, out PhysicsComponent? physics))
+            !TryComp(ent, out PhysicsComponent? physics) ||
+            _ignorePredictionHitQuery.HasComp(args.OtherEntity))
         {
             return;
         }
@@ -124,7 +113,7 @@ public sealed class GunPredictionSystem : SharedGunPredictionSystem
             return;
 
         if (_spriteQuery.TryComp(ent, out var sprite))
-            sprite.Visible = false;
+            _sprite.SetVisible((ent, sprite), false);
     }
 
     public override void Update(float frameTime)
@@ -148,10 +137,16 @@ public sealed class GunPredictionSystem : SharedGunPredictionSystem
             var hit = new HashSet<(NetEntity, MapCoordinates)>();
             foreach (var contact in contacts)
             {
+                if (_ignorePredictionHitQuery.HasComp(contact))
+                    continue;
+
                 var netEnt = GetNetEntity(contact);
                 var pos = _transform.GetMapCoordinates(contact);
                 hit.Add((netEnt, pos));
             }
+
+            if (hit.Count == 0)
+                continue;
 
             var ev = new PredictedProjectileHitEvent(uid.Id, hit);
             RaiseNetworkEvent(ev);

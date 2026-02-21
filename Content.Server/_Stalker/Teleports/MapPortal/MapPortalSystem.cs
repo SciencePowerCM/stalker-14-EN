@@ -5,6 +5,8 @@ using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Teleportation.Components;
 using Content.Shared.Teleportation.Systems;
 using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Random;
@@ -97,15 +99,15 @@ public sealed class MapPortalSystem : SharedTeleportSystem
         if (_mapSystem.MapExists(component.MapId))
             return;
 
-        var map = _mapSystem.CreateMap(out var mapId, true);
-        component.MapId = mapId;
-        //// Loads map from a specified path and initializes it.
-        if (!_mapLoader.TryLoad(mapId, component.MapPath, out var grids))
-            _sawmill.Error($"Map with id {mapId} from {component.MapPath} load failed.");
-
-        //if (!_mapSystem.IsMapInitialized(mapId))
-        //    _mapManager.DoMapInitialize(mapId);
-
+        if (!_mapLoader.TryLoadMap(
+                component.MapPath,
+                out _,
+                out var grids,
+                DeserializationOptions.Default with { InitializeMaps = true }))
+        {
+            _sawmill.Error($"Map load from {component.MapPath} has failed.");
+            return;
+        }
 
         Dirty(uid, component);
         if (grids == null)

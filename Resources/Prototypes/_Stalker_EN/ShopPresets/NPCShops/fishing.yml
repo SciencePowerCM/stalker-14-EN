@@ -1,6 +1,7 @@
 # im not committed to these numbers in any way
 - type: shopPreset
   id: STFishShopPreset
+  minSellPrice: 5
   itemsForSale:
     # normal fish
     STFishBitterling: 20
@@ -20,6 +21,11 @@
     STFishSwiftLurker: 250
     STFishDenseTench: 250
     STFishCatfish: 2500
+    STFishSneakyTench: 250
+    STFishFlish: 200
+    STFishDoubleEel: 500
+    STFishJellyfish: 750
+    STFishPallidSturgeon: 1500
     # misc
     Blunt: 35
 

@@ -1,35 +1,31 @@
 using Content.Shared.Clothing.Components;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
-using Content.Shared.Humanoid;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Item;
 using Content.Shared.Strip.Components;
-using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.Clothing.EntitySystems;
 
 public abstract class ClothingSystem : EntitySystem
 {
     [Dependency] private readonly SharedItemSystem _itemSys = default!;
-    [Dependency] private readonly SharedContainerSystem _containerSys = default!;
-    [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoidSystem = default!;
     [Dependency] private readonly InventorySystem _invSystem = default!;
     [Dependency] private readonly SharedHandsSystem _handsSystem = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<ClothingComponent, UseInHandEvent>(OnUseInHand);
-        SubscribeLocalEvent<ClothingComponent, ComponentGetState>(OnGetState);
-        SubscribeLocalEvent<ClothingComponent, ComponentHandleState>(OnHandleState);
+        SubscribeLocalEvent<ClothingComponent, AfterAutoHandleStateEvent>(AfterAutoHandleState);
         SubscribeLocalEvent<ClothingComponent, GotEquippedEvent>(OnGotEquipped);
         SubscribeLocalEvent<ClothingComponent, GotUnequippedEvent>(OnGotUnequipped);
-        SubscribeLocalEvent<ClothingComponent, ItemMaskToggledEvent>(OnMaskToggled);
 
         SubscribeLocalEvent<ClothingComponent, ClothingEquipDoAfterEvent>(OnEquipDoAfter);
         SubscribeLocalEvent<ClothingComponent, ClothingUnequipDoAfterEvent>(OnUnequipDoAfter);
@@ -39,6 +35,9 @@ public abstract class ClothingSystem : EntitySystem
 
     private void OnUseInHand(Entity<ClothingComponent> ent, ref UseInHandEvent args)
     {
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
         if (args.Handled || !ent.Comp.QuickEquip)
             return;
 
@@ -56,88 +55,40 @@ public abstract class ClothingSystem : EntitySystem
         Entity<ClothingComponent> toEquipEnt,
         Entity<InventoryComponent, HandsComponent> userEnt)
     {
+        // First pass: Try to find an empty slot that fits
         foreach (var slotDef in userEnt.Comp1.Slots)
         {
             if (!_invSystem.CanEquip(userEnt, toEquipEnt, slotDef.Name, out _, slotDef, userEnt, toEquipEnt))
                 continue;
 
-            if (_invSystem.TryGetSlotEntity(userEnt, slotDef.Name, out var slotEntity, userEnt))
-            {
-                // Item in slot has to be quick equipable as well
-                if (TryComp(slotEntity, out ClothingComponent? item) && !item.QuickEquip)
-                    continue;
-
-                if (!_invSystem.TryUnequip(userEnt, slotDef.Name, true, inventory: userEnt, checkDoafter: true))
-                    continue;
-
-                if (!_invSystem.TryEquip(userEnt, toEquipEnt, slotDef.Name, true, inventory: userEnt, clothing: toEquipEnt, checkDoafter: true))
-                    continue;
-
-                _handsSystem.PickupOrDrop(userEnt, slotEntity.Value, handsComp: userEnt);
-            }
-            else
-            {
-                if (!_invSystem.TryEquip(userEnt, toEquipEnt, slotDef.Name, true, inventory: userEnt, clothing: toEquipEnt, checkDoafter: true))
-                    continue;
-            }
-
-            break;
-        }
-    }
-
-    private void ToggleVisualLayers(EntityUid equipee, HashSet<HumanoidVisualLayers> layers, HashSet<HumanoidVisualLayers> appearanceLayers)
-    {
-        foreach (HumanoidVisualLayers layer in layers)
-        {
-            if (!appearanceLayers.Contains(layer))
+            // Skip occupied slots in first pass
+            if (_invSystem.TryGetSlotEntity(userEnt, slotDef.Name, out _, userEnt))
                 continue;
 
-            InventorySystem.InventorySlotEnumerator enumerator = _invSystem.GetSlotEnumerator(equipee);
-
-            bool shouldLayerShow = true;
-            while (enumerator.NextItem(out EntityUid item, out SlotDefinition? slot))
-            {
-                if (TryComp(item, out HideLayerClothingComponent? comp))
-                {
-                    if (comp.Slots.Contains(layer))
-                    {
-                        if (TryComp(item, out ClothingComponent? clothing) && clothing.Slots == slot.SlotFlags)
-                        {
-                            //Checks for mask toggling. TODO: Make a generic system for this
-                            if (comp.HideOnToggle && TryComp(item, out MaskComponent? mask))
-                            {
-                                if (clothing.EquippedPrefix != mask.EquippedPrefix)
-                                {
-                                    shouldLayerShow = false;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                shouldLayerShow = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            _humanoidSystem.SetLayerVisibility(equipee, layer, shouldLayerShow);
+            // Empty slot found - try to equip and ALWAYS return
+            // TryEquip returns false if it starts a DoAfter, but the DoAfter will complete the equip
+            _invSystem.TryEquip(userEnt, toEquipEnt, slotDef.Name, true, inventory: userEnt, clothing: toEquipEnt, checkDoafter: true);
+            return;
         }
+
+        // All compatible slots occupied - fail silently
+        // FIXME: Swap logic was removed from master - previously would unequip existing item and pick it up
     }
 
     protected virtual void OnGotEquipped(EntityUid uid, ClothingComponent component, GotEquippedEvent args)
     {
         component.InSlot = args.Slot;
-        CheckEquipmentForLayerHide(args.Equipment, args.Equipee);
+        component.InSlotFlag = args.SlotFlags;
+        Dirty(uid, component);
 
-        if ((component.Slots & args.SlotFlags) != SlotFlags.NONE)
-        {
-            var gotEquippedEvent = new ClothingGotEquippedEvent(args.Equipee, component);
-            RaiseLocalEvent(uid, ref gotEquippedEvent);
+        if ((component.Slots & args.SlotFlags) == SlotFlags.NONE)
+            return;
 
-            var didEquippedEvent = new ClothingDidEquippedEvent((uid, component));
-            RaiseLocalEvent(args.Equipee, ref didEquippedEvent);
-        }
+        var gotEquippedEvent = new ClothingGotEquippedEvent(args.Equipee, component);
+        RaiseLocalEvent(uid, ref gotEquippedEvent);
+
+        var didEquippedEvent = new ClothingDidEquippedEvent((uid, component));
+        RaiseLocalEvent(args.Equipee, ref didEquippedEvent);
     }
 
     protected virtual void OnGotUnequipped(EntityUid uid, ClothingComponent component, GotUnequippedEvent args)
@@ -152,31 +103,13 @@ public abstract class ClothingSystem : EntitySystem
         }
 
         component.InSlot = null;
-        CheckEquipmentForLayerHide(args.Equipment, args.Equipee);
+        component.InSlotFlag = null;
+        Dirty(uid, component);
     }
 
-    private void OnGetState(EntityUid uid, ClothingComponent component, ref ComponentGetState args)
+    private void AfterAutoHandleState(Entity<ClothingComponent> ent, ref AfterAutoHandleStateEvent args)
     {
-        args.State = new ClothingComponentState(component.EquippedPrefix);
-    }
-
-    private void OnHandleState(EntityUid uid, ClothingComponent component, ref ComponentHandleState args)
-    {
-        if (args.Current is ClothingComponentState state)
-        {
-            SetEquippedPrefix(uid, state.EquippedPrefix, component);
-            if (component.InSlot != null && _containerSys.TryGetContainingContainer((uid, null, null), out var container))
-            {
-                CheckEquipmentForLayerHide(uid, container.Owner);
-            }
-        }
-    }
-
-    private void OnMaskToggled(Entity<ClothingComponent> ent, ref ItemMaskToggledEvent args)
-    {
-        //TODO: sprites for 'pulled down' state. defaults to invisible due to no sprite with this prefix
-        SetEquippedPrefix(ent, args.IsToggled ? args.equippedPrefix : null, ent);
-        CheckEquipmentForLayerHide(ent.Owner, args.Wearer);
+        _itemSys.VisualsChanged(ent.Owner);
     }
 
     private void OnEquipDoAfter(Entity<ClothingComponent> ent, ref ClothingEquipDoAfterEvent args)
@@ -190,7 +123,7 @@ public abstract class ClothingSystem : EntitySystem
     {
         if (args.Handled || args.Cancelled || args.Target is not { } target)
             return;
-        args.Handled = _invSystem.TryUnequip(args.User, target, args.Slot, clothing: ent.Comp, predicted: true, checkDoafter: false);
+        args.Handled = _invSystem.TryUnequip(args.User, target, args.Slot, clothing: ent.Comp, predicted: true, checkDoafter: false, triggerHandContact: true);
         if (args.Handled)
             _handsSystem.TryPickup(args.User, ent);
     }
@@ -198,12 +131,6 @@ public abstract class ClothingSystem : EntitySystem
     private void OnItemStripped(Entity<ClothingComponent> ent, ref BeforeItemStrippedEvent args)
     {
         args.Additive += ent.Comp.StripDelay;
-    }
-
-    private void CheckEquipmentForLayerHide(EntityUid equipment, EntityUid equipee)
-    {
-        if (TryComp(equipment, out HideLayerClothingComponent? clothesComp) && TryComp(equipee, out HumanoidAppearanceComponent? appearanceComp))
-            ToggleVisualLayers(equipee, clothesComp.Slots, appearanceComp.HideLayersOnEquip);
     }
 
     #region Public API

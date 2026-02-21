@@ -49,6 +49,9 @@ public sealed class STWeaponModuleSystem : STSharedWeaponModuleSystem
         entity.Comp.CachedScopeEffect = null;
         entity.Comp.IntegratedScopeEffect = HasComp<ScopeComponent>(entity);
 
+        if (TryComp<GunComponent>(entity, out var gun) && gun.SoundGunshot != null)
+            entity.Comp.BaseSoundGunshotVolume = gun.SoundGunshot.Params.Volume;
+
         if (!_containerMangerQuery.TryGetComponent(entity, out var containerComponent))
             return;
 
@@ -72,24 +75,21 @@ public sealed class STWeaponModuleSystem : STSharedWeaponModuleSystem
         if (TryComp(entity.Owner, out FarGunshotComponent? farGunshotComponent)
             && farGunshotComponent.Sound is not null)
         {
-            farGunshotComponent.SilencerDecrease = effect.FarshotSoundDecrease;
+            farGunshotComponent.SilencerDecrease = MathHelper.CloseToPercent(effect.FarshotSoundDecrease, FarGunshotComponent.DefaultSilencerDecrease)
+                ? effect.FarshotSoundDecrease
+                : null;
 
-            var farAudioParams = farGunshotComponent.Sound.Params;
-
-            farAudioParams.Volume += effect.SoundGunshotVolumeAddition;
-            farGunshotComponent.Sound.Params = farAudioParams;
+            // Use WithVolume() to SET from base, not accumulate
+            farGunshotComponent.Sound.Params = farGunshotComponent.Sound.Params
+                .WithVolume(farGunshotComponent.BaseVolume + effect.SoundGunshotVolumeAddition);
         }
 
         if (args.SoundGunshot is null)
             return;
 
-        var audioParams = args.SoundGunshot?.Params ?? AudioParams.Default;
-
-        // Hotfix how to handle super silent silencers happening because volume additions
-        // pile up. We need to find something else, because a user in the future might have
-        // not only one volume reducing module
-        audioParams.Volume += effect.SoundGunshotVolumeAddition;
-        args.SoundGunshot!.Params = audioParams;
+        // Use WithVolume() to SET from stored base volume, not accumulate
+        args.SoundGunshot.Params = args.SoundGunshot.Params
+            .WithVolume(entity.Comp.BaseSoundGunshotVolume + effect.SoundGunshotVolumeAddition);
     }
 
     private void UpdateContainerEffect(BaseContainer container)
@@ -129,7 +129,7 @@ public sealed class STWeaponModuleSystem : STSharedWeaponModuleSystem
         entity.Comp.CachedEffect = effect;
         Dirty(entity);
 
-        if (!entity.Comp.IntegratedScopeEffect)
+        if (!entity.Comp.IntegratedScopeEffect && container.ID == "gun_module_scope")
             _sharedScope.TrySet(entity.Owner, scopeEffect);
 
         if (!TryComp<GunComponent>(entity, out var gun))

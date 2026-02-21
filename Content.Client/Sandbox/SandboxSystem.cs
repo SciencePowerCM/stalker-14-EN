@@ -1,3 +1,4 @@
+using Content.Client._Stalker_EN.SmallBbOverlay; // ST14-EN Addition
 using Content.Client.Administration.Managers;
 using Content.Client.Movement.Systems;
 using Content.Shared.Sandbox;
@@ -18,6 +19,8 @@ namespace Content.Client.Sandbox
         [Dependency] private readonly ContentEyeSystem _contentEye = default!;
         [Dependency] private readonly SharedTransformSystem _transform = default!;
         [Dependency] private readonly SharedMapSystem _mapSystem = default!;
+
+        [Dependency] private readonly SmallBbOverlaySystem _smallBbOverlaySystem = default!; // ST14-EN Addition
 
         private bool _sandboxEnabled;
         public bool SandboxAllowed { get; private set; }
@@ -90,7 +93,7 @@ namespace Content.Client.Sandbox
 
             // Try copy entity.
             if (uid.IsValid()
-                && EntityManager.TryGetComponent(uid, out MetaDataComponent? comp)
+                && TryComp(uid, out MetaDataComponent? comp)
                 && !comp.EntityDeleted)
             {
                 if (comp.EntityPrototype == null || comp.EntityPrototype.HideSpawnMenu || comp.EntityPrototype.Abstract)
@@ -110,7 +113,7 @@ namespace Content.Client.Sandbox
             }
 
             // Try copy tile.
-            
+
             if (!_map.TryFindGridAt(_transform.ToMapCoordinates(coords), out var gridUid, out var grid) || !_mapSystem.TryGetTileRef(gridUid, grid, coords, out var tileRef))
                 return false;
 
@@ -158,9 +161,10 @@ namespace Content.Client.Sandbox
             _consoleHost.ExecuteCommand("physics shapes");
         }
 
-        public void MachineLinking()
+        // ST14-EN addition
+        public void ShowSmallBb()
         {
-            _consoleHost.ExecuteCommand("signallink");
+            _smallBbOverlaySystem.SetEnabled(!_smallBbOverlaySystem.Added);
         }
     }
 }

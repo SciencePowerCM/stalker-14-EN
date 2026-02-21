@@ -18,6 +18,9 @@
     - cash
     - cash_20
     - cash_100
+    layerFunction: Threshold
+  - type: StackLayerThreshold
+    thresholds: [20, 100]
   - type: Sprite
     sprite: _Stalker/Objects/Economy/rubles.rsi
     state: cash
@@ -41,13 +44,13 @@
     - RoublesFake
 - type: currency
   id: RoublesFake
-  displayName: rubles
+  displayName: store-currency-display-ruble
   cash:
     1: RoublesFake
   canWithdraw: true
 - type: stack
   id: RoublesFake
-  name: rubles
+  name: stack-rouble
   icon: { sprite: "/Textures/_Stalker/Objects/Economy/rubles.rsi", state: cash }
   spawn: RoublesFake
 

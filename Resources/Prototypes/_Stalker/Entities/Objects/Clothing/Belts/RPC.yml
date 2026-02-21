@@ -14,15 +14,15 @@
     areaInsertRadius: 2
     grid:
       - 0,2,0,3
-      - 1,-0,1,-0
+      - 1,0,1,0
       - 2,2,2,3
-      - 3,-0,3,-0
+      - 3,0,3,0
       - 4,2,4,3
-      - 5,-0,5,-0
+      - 5,0,5,0
       - 6,2,6,3
-      - 7,-0,7,-0
+      - 7,0,7,0
       - 8,2,8,3
-      - 9,-0,9,-0
+      - 9,0,9,0
       - 10,2,10,3
   - type: Sprite
     sprite: _Stalker/Objects/Clothing/belt/tarzan_black.rsi
@@ -75,8 +75,9 @@
         - 0,0,7,7
       whitelist:
         tags:
-          - CartridgeAmmo
           - Cartridge
+        components:
+          - CartridgeAmmo
 
 - type: entity
   parent: ClothingBeltStorageStalkerBase
@@ -101,15 +102,15 @@
       whitelist:
         tags:
           - Knife
-    - type: ItemMapper
-      mapLayers:
-        knife:
-          whitelist:
-            tags:
-              - Knife
-      sprite: _Stalker/Objects/Clothing/Belts/knife_belt_overlay.rsi
-      spriteLayers:
-      - knife
+    # - type: ItemMapper # Stalker-EN-TODO: Layer "knife" does not exist in the rsi!
+      # mapLayers:
+        # knife:
+          # whitelist:
+            # tags:
+              # - Knife
+      # sprite: _Stalker/Objects/Clothing/Belts/knife_belt_overlay.rsi
+      # spriteLayers:
+      # - knife
     - type: Appearance
 
 - type: entity
@@ -122,12 +123,10 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 2,0,7,3
-        - 0,4,0,2
-        - 1,0,0,2
-        - 0,0,0,0
+        - 0,0,1,0
     - type: Sprite
       sprite: _Stalker/Objects/Clothing/belt/belt_green.rsi
       state: icon
@@ -144,13 +143,11 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 4,0,9,3
-        - 0,1,0,1
         - 0,0,1,0
-        - 0,4,0,2
-        - 1,0,0,2
+        - 0,1,0,1
         - 2,2,2,2
     - type: Sprite
       sprite: _Stalker/Objects/Clothing/belt/belt_officer.rsi
@@ -168,7 +165,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -189,7 +186,7 @@
     - type: STWeight
       self: 5
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 4,0,9,3
         - 0,0,2,3
@@ -209,13 +206,11 @@
     - type: STWeight
       self: 4
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 4,0,9,3
-        - 0,1,0,1
         - 0,0,1,0
-        - 0,4,0,2
-        - 1,0,0,2
+        - 0,1,0,1
         - 2,2,2,2
     - type: Sprite
       sprite: _Stalker/Objects/Clothing/belt/belt_berill.rsi
@@ -233,7 +228,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -254,7 +249,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -275,7 +270,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -296,7 +291,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -317,7 +312,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -338,7 +333,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -359,7 +354,7 @@
     - type: STWeight
       self: 5
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 4,0,9,3
         - 0,0,2,3
@@ -379,7 +374,7 @@
     - type: STWeight
       self: 3
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 3,0,8,3
         - 0,1,0,1
@@ -416,13 +411,11 @@
     - type: STWeight
       self: 4
     - type: Storage
-      maxItemsize: Large
+      maxItemSize: Large
       grid:
         - 4,0,9,3
-        - 0,1,0,1
         - 0,0,1,0
-        - 0,4,0,2
-        - 1,0,0,2
+        - 0,1,0,1
         - 2,2,2,2
     - type: Sprite
       sprite: _Stalker/Objects/Clothing/belt/belt_deserter_holster.rsi

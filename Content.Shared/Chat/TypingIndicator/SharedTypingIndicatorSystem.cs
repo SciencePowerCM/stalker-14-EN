@@ -1,7 +1,10 @@
 using Content.Shared.ActionBlocker;
 using Content.Shared.Clothing;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Inventory;
+using Robust.Shared.Containers;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.Chat.TypingIndicator;
@@ -13,13 +16,13 @@ public abstract class SharedTypingIndicatorSystem : EntitySystem
 {
     [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private readonly SharedContainerSystem _containerSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
     /// <summary>
     ///     Default ID of <see cref="TypingIndicatorPrototype"/>
     /// </summary>
-    [ValidatePrototypeId<TypingIndicatorPrototype>]
-    public const string InitialIndicatorId = "default";
+    public static readonly ProtoId<TypingIndicatorPrototype> InitialIndicatorId = "default";
 
     public override void Initialize()
     {
@@ -30,6 +33,7 @@ public abstract class SharedTypingIndicatorSystem : EntitySystem
         SubscribeLocalEvent<TypingIndicatorClothingComponent, ClothingGotEquippedEvent>(OnGotEquipped);
         SubscribeLocalEvent<TypingIndicatorClothingComponent, ClothingGotUnequippedEvent>(OnGotUnequipped);
         SubscribeLocalEvent<TypingIndicatorClothingComponent, InventoryRelayedEvent<BeforeShowTypingIndicatorEvent>>(BeforeShow);
+        SubscribeLocalEvent<TypingIndicatorClothingComponent, MapInitEvent>(OnMapInit);
 
         SubscribeAllEvent<TypingChangedEvent>(OnTypingChanged);
     }
@@ -45,7 +49,7 @@ public abstract class SharedTypingIndicatorSystem : EntitySystem
     private void OnPlayerDetached(EntityUid uid, TypingIndicatorComponent component, PlayerDetachedEvent args)
     {
         // player left entity body - hide typing indicator
-        SetTypingIndicatorEnabled(uid, false);
+        SetTypingIndicatorState(uid, TypingIndicatorState.None);
     }
 
     private void OnGotEquipped(Entity<TypingIndicatorClothingComponent> entity, ref ClothingGotEquippedEvent args)
@@ -57,6 +61,21 @@ public abstract class SharedTypingIndicatorSystem : EntitySystem
     private void OnGotUnequipped(Entity<TypingIndicatorClothingComponent> entity, ref ClothingGotUnequippedEvent args)
     {
         entity.Comp.GotEquippedTime = null;
+        Dirty(entity);
+    }
+
+    private void OnMapInit(Entity<TypingIndicatorClothingComponent> entity, ref MapInitEvent args)
+    {
+        // ClothingGotEquippedEvent doesn't fire for items restored from serialization
+        if (entity.Comp.GotEquippedTime != null)
+            return;
+
+        // Items not in containers aren't equipped and shouldn't override typing indicators
+        if (!_containerSystem.TryGetContainingContainer((entity.Owner, null, null), out _))
+            return;
+
+        // TryUpdateTimeAndIndicator rejects null times, causing fallback to default indicator
+        entity.Comp.GotEquippedTime = _timing.CurTime;
         Dirty(entity);
     }
 
@@ -78,18 +97,18 @@ public abstract class SharedTypingIndicatorSystem : EntitySystem
         if (!_actionBlocker.CanEmote(uid.Value) && !_actionBlocker.CanSpeak(uid.Value))
         {
             // nah, make sure that typing indicator is disabled
-            SetTypingIndicatorEnabled(uid.Value, false);
+            SetTypingIndicatorState(uid.Value, TypingIndicatorState.None);
             return;
         }
 
-        SetTypingIndicatorEnabled(uid.Value, ev.IsTyping);
+        SetTypingIndicatorState(uid.Value, ev.State);
     }
 
-    private void SetTypingIndicatorEnabled(EntityUid uid, bool isEnabled, AppearanceComponent? appearance = null)
+    private void SetTypingIndicatorState(EntityUid uid, TypingIndicatorState state, AppearanceComponent? appearance = null)
     {
         if (!Resolve(uid, ref appearance, false))
             return;
 
-        _appearance.SetData(uid, TypingIndicatorVisuals.IsTyping, isEnabled, appearance);
+        _appearance.SetData(uid, TypingIndicatorVisuals.State, state, appearance);
     }
 }

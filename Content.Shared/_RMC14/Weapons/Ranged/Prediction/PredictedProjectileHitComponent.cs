@@ -1,4 +1,4 @@
-﻿using Content.Shared.Projectiles;
+using Content.Shared.Projectiles;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
 

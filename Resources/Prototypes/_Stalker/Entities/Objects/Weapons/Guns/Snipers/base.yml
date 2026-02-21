@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: STBaseWeaponGun
+  parent: [ STBaseWeaponGun, BaseGunWieldable ] # ST14-EN: Made this also inherit from BaseGunWieldable
   id: STBaseWeaponSniper
   name: sniper
   description: A rooty tooty point and shooty.
@@ -15,7 +15,7 @@
       map: ["enum.GunVisualLayers.Base"]
     - map: ["enum.GunVisualLayers.Mag"]
     - map: ["scope"]
-  - type: Wieldable
+  #ST14-EN: Removed Wieldable
   - type: GunWieldBonus
     minAngle: -50
     maxAngle: -50
@@ -34,11 +34,10 @@
     containers:
       ballistic-ammo: !type:Container
         ents: []
-      gun_module_scope: !type:ContainerSlot
-      gun_module_muzzle: !type:ContainerSlot
+      gun_module_scope: !type:ContainerSlot {}
+      gun_module_muzzle: !type:ContainerSlot {}
   - type: PullDoAfter
     pullTime: 3.5
-  - type: STWeaponModuleContainer
   - type: ItemSlots
     slots:
       gun_module_scope:
@@ -53,4 +52,3 @@
         whitelist:
           tags:
           - STWeaponModuleSniperSilencer
-

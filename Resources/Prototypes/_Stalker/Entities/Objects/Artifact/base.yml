@@ -7,7 +7,7 @@
   components:
     - type: PsyonicsAbsorbable
     - type: STWeight
-      self: 5
+      self: 3
     - type: PointLightDisableOnEquip
     - type: ZoneArtifactDetectorTarget
       detectable: true
@@ -22,7 +22,7 @@
       sprite: _Stalker/Objects/artifacts.rsi
       state: soul
     - type: Clothing
-      quickEquip: false
+      quickEquip: true
       slots:
         - ARTIFACT
     - type: Tag
@@ -44,6 +44,8 @@
   id: BaseArtifactStorage
   abstract: true
   components:
+    - type: Item
+      size: Huge
     - type: Storage
       maxItemSize: Huge
       grid:

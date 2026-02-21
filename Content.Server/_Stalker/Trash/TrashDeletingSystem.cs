@@ -27,6 +27,12 @@ public sealed class TrashDeletingSystem : EntitySystem
     /// </summary>
     private bool _warningIssued;
 
+    // Stalker-TODO: This should not exist. Ideally we need a proper way to skip "Update" in this system in test
+    /// <summary>
+    /// Is this system Enabled?
+    /// </summary>
+    public bool Enabled = true;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -75,6 +81,9 @@ public sealed class TrashDeletingSystem : EntitySystem
 
     public override void Update(float frameTime)
     {
+        if (!Enabled)
+            return;
+
         base.Update(frameTime);
 
         if (!_warningIssued && _timing.CurTime >= _nextTimeUpdate - TimeSpan.FromSeconds(30))
@@ -136,8 +145,10 @@ public sealed class TrashDeletingSystem : EntitySystem
             {
                 _mapMan.SetMapPaused(map, true);
             }
+            else if (hasPlayer && _mapMan.IsMapPaused(map))
+            {
+                _mapMan.SetMapPaused(map, false);
+            }
         }
     }
-
-
 }

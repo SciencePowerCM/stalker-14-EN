@@ -8,7 +8,7 @@
     snap:
     - Wall
   components:
-  - type: IgnorePredictionHide
+  - type: IgnorePredictionHit
   - type: FloorOccluder
   - type: Transform
     anchored: true
@@ -71,7 +71,7 @@
         - Catwalk
   - type: TileEntityEffect
     effects:
-    - !type:ExtinguishReaction
+    - !type:Extinguish
 
 - type: entity
   parent: STFloorWaterEntity

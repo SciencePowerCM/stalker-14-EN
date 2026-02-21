@@ -1,20 +1,27 @@
+using System.Linq;
 using System.Numerics;
 using Content.Server._Stalker.Sponsors;
 using Content.Server._Stalker.StalkerDB;
 using Content.Server._Stalker.StalkerRepository;
 using Content.Server._Stalker.Storage;
 using Content.Server._Stalker.Teleports.StalkerBandPortal;
+using Content.Server._Stalker_EN.NoobDenyer; // stalker-changes
+using Content.Server.Players.PlayTimeTracking; // stalker-changes
 using Content.Shared._Stalker.StalkerRepository;
 using Content.Shared._Stalker.Teleport;
 using Content.Shared.Access.Systems;
+using Content.Shared.Popups; // stalker-changes
 using Content.Shared.Teleportation.Components;
 using Microsoft.Extensions.Logging;
 using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
+using Robust.Shared.Timing;
 using SponsorSystem = Content.Server._Stalker.Sponsors.System.SponsorSystem;
 
 namespace Content.Server._Stalker.Teleports.DuplicateTeleport;
@@ -31,8 +38,12 @@ public sealed class DuplicateTeleportSystem : SharedTeleportSystem
     [Dependency] private readonly StalkerPortalSystem _stalkerPortals = default!;
     [Dependency] private readonly StalkerRepositorySystem _repositorySystem = default!;
     [Dependency] private readonly SponsorSystem _sponsorSystem = default!;
-    
+    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly PlayTimeTrackingManager _playTimeTrackingManager = default!; // stalker-changes
+    [Dependency] private readonly SharedPopupSystem _popup = default!; // stalker-changes
+
     private const string MoneyId = "Roubles";
+    private static readonly TimeSpan StashPortalCooldownTime = TimeSpan.FromSeconds(5);
     private ISawmill _sawmill = default!;
     private Dictionary<string, EntityUid> ArenaMap { get; } = new();
     private Dictionary<string, EntityUid?> ArenaGrid { get; } = new();
@@ -48,21 +59,39 @@ public sealed class DuplicateTeleportSystem : SharedTeleportSystem
         var subject = args.OtherEntity;
         var portalEnt = args.OurEntity;
 
-        // timeout entity
-        if (HasComp<PortalTimeoutComponent>(subject))
-            return;
+        if (TryComp<PortalTimeoutComponent>(subject, out var existingTimeout))
+        {
+            if (existingTimeout.Cooldown != null && existingTimeout.Cooldown > _timing.CurTime)
+                return;
+        }
 
         if (!TryComp<ActorComponent>(subject, out var actor))
             return;
+
+        // stalker-changes: Block Rookies (<10h playtime) from using non-Cordon stash portals
+        if (HasComp<NoobDenyerComponent>(entity))
+        {
+            var session = actor.PlayerSession;
+            var playtime = _playTimeTrackingManager.GetOverallPlaytime(session).TotalHours;
+
+            if (playtime < 10)
+            {
+                _popup.PopupEntity(Loc.GetString("rookie-stash-denied"), subject);
+                return;
+            }
+        }
 
         if (!_accessReaderSystem.IsAllowed(subject, portalEnt))
             return;
 
         var timeout = EnsureComp<PortalTimeoutComponent>(subject);
         timeout.EnteredPortal = portalEnt;
+        timeout.Cooldown = _timing.CurTime + StashPortalCooldownTime;
         Dirty(subject, timeout);
 
         var (mapUid, gridUid) = StalkerAssertArenaLoaded(actor.PlayerSession.Name, actor.PlayerSession.UserId, entity.Comp, entity);
+        if (!mapUid.IsValid())
+            return;
         TeleportEntity(subject, new EntityCoordinates(gridUid ?? mapUid, Vector2.One));
     }
 
@@ -86,27 +115,32 @@ public sealed class DuplicateTeleportSystem : SharedTeleportSystem
             return (stalkerTeleportData.MapId, stalkerTeleportData.GridId);
         }
 
-        _mapSystem.CreateMap(out var mapId, true);
-        ArenaMap[concatenated] = _mapManager.GetMapEntityId(mapId);
-        _metaDataSystem.SetEntityName(ArenaMap[concatenated], $"STALKER_MAP-{concatenated}");
-        var map = Comp<MapComponent>(ArenaMap[concatenated]);
-        var isLoaded = _map.TryLoad(map.MapId, component.ArenaMapPath, out var grids);
-        _mapSystem.SetPaused(map.MapId, false);
-        if (grids is null || !isLoaded)
+        var isLoaded = _map.TryLoadMap(
+            component.ArenaMapPath,
+            out var map,
+            out var grids,
+            DeserializationOptions.Default with {InitializeMaps = true});
+
+        if (grids is null || !isLoaded || map is null)
         {
             _sawmill.Error($"Couldn't load a map {component.ArenaMapPath} for {concatenated}");
-            return (ArenaMap[concatenated], null);
+            return (EntityUid.Invalid, null);
         }
 
-        if (grids.Count != 0)
+        ArenaMap[concatenated] = map.Value.Owner;
+        _metaDataSystem.SetEntityName(ArenaMap[concatenated], $"STALKER_MAP-{concatenated}");
+
+        EntityUid? firstGrid = grids.Count != 0 ? grids.First() : null;
+
+        if (firstGrid != null)
         {
-            _metaDataSystem.SetEntityName(grids[0], $"STALKER_GRID-{concatenated}");
-            ArenaGrid[concatenated] = grids[0];
+            _metaDataSystem.SetEntityName(firstGrid.Value, $"STALKER_GRID-{concatenated}");
+            ArenaGrid[concatenated] = firstGrid;
         }
         else
             ArenaGrid[concatenated] = null;
 
-        if (TryComp(grids[0], out TransformComponent? xform))
+        if (TryComp(firstGrid, out TransformComponent? xform))
         {
             // TODO: Obsolete
             var enumerator = xform.ChildEnumerator;
@@ -127,7 +161,7 @@ public sealed class DuplicateTeleportSystem : SharedTeleportSystem
                 {
                     stalkerRepositoryComponent.MaxWeight = component.MaxWeight;
                 }
-                
+
                 // Sponsors
                 stalkerRepositoryComponent.MaxWeight =
                     _sponsorSystem.GetRepositoryWeight(userId, stalkerRepositoryComponent.MaxWeight);

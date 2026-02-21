@@ -1,5 +1,6 @@
 ﻿- type: shopPreset
   id: MilitaryPremiumShopPresetEN # PENDING REWORK
+  minSellPrice: 0
   itemsForSale:
     ClothingNeckDogtagBrigand: 2
     ClothingNeckDogtagStalker: 1
@@ -49,6 +50,7 @@
 
 - type: shopPreset
   id: VoenstalShopPresetEN # Voenstals
+  minSellPrice: 5
   itemsForSale:
     TradeBox: 1
   categories:
@@ -204,6 +206,7 @@
       CheapLighter: 5
       GeigerCounter: 50
       BaseRadio: 50
+      STRadioHeadset: 150
       STFlashlightSeclite: 50
       PowerCellHyper: 50
       HandheldGPSBasic: 50
@@ -222,7 +225,7 @@
       CraftBag: 10
       CasseteArstotzka1984: 500
       STElasticRubberRed: 50
-      STElasticRubberGreen: 50 
+      STElasticRubberGreen: 50
       STElasticRubberBlue: 50
 
   - name: shop-category-provisions
@@ -333,6 +336,7 @@
 
 - type: shopPreset
   id: OKSOPShopPresetEN # OKSOP REWORK IN-PROGRESS
+  minSellPrice: 5
   itemsForSale:
     FoodTinMRETrash: 0
     FoodTinPeachesTrash: 0
@@ -520,6 +524,7 @@
       Lighter: 30
       GeigerCounter: 50
       BaseRadio: 50
+      STRadioHeadset: 150
       STFlashlightSeclite: 50
       PowerCellHyper: 50
       HandheldGPSBasic: 50
@@ -537,6 +542,7 @@
       HatchetStalker: 150
       STSkinsKitMilitary: 500
       AccordionInstrument: 500
+      FoldedFlagMili: 250
 
   - name: shop-category-modules
     priority: 11
@@ -576,6 +582,7 @@
 
 - type: shopPreset
   id: OKSOPOfficerShopPresetEN
+  minSellPrice: 5
   itemsForSale:
     FoodTinMRETrash: 0
     FoodTinPeachesTrash: 0
@@ -600,6 +607,7 @@
 
 - type: shopPreset
   id: OKSOPClothingShopPresetEN
+  minSellPrice: 5
   itemsForSale:
     FoodTinMRETrash: 0
     FoodTinPeachesTrash: 0
@@ -617,6 +625,7 @@
       ClothingHeadBandSkull: 30
       ClothingHeadBandana2Military: 15
       ClothingHeadHatMilitary: 15
+      ClothingHeadHatBeretBrigmedic: 100
 
   - name: "Shirt"
     priority: 2
@@ -691,8 +700,8 @@
     priority: 3
     items:
       # Armbands
-      ClothingBandageStalkerUk: 5
-      ClothingBandageStalkerRed: 5
+      ClothingBandageStalkerUk: 10
+      ClothingBandageStalkerKrest: 10
       ClothingMaskNeckFacemask: 10
       # Masks
       ClothingMaskNeckBalaklava1: 10

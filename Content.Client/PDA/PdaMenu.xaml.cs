@@ -141,6 +141,11 @@ namespace Content.Client.PDA
                 _pdaOwner = state.PdaOwnerInfo.ActualOwnerName;
                 PdaOwnerLabel.SetMarkup(Loc.GetString("comp-pda-ui-owner",
                     ("actualOwnerName", _pdaOwner)));
+                PdaOwnerLabel.Visible = true;
+            }
+            else
+            {
+                PdaOwnerLabel.Visible = false;
             }
 
 
@@ -191,6 +196,12 @@ namespace Content.Client.PDA
             ActivateMusicButton.Visible = state.CanPlayMusic;
             ShowUplinkButton.Visible = state.HasUplink;
             LockUplinkButton.Visible = state.HasUplink;
+
+            // stalker-changes-start - Update silent mode button text based on state
+            SilentModeButton.Text = state.SilentModeEnabled
+                ? Loc.GetString("comp-pda-ui-silent-mode-button-on")
+                : Loc.GetString("comp-pda-ui-silent-mode-button-off");
+            // stalker-changes-end
         }
 
         public void UpdateAvailablePrograms(List<(EntityUid, CartridgeComponent)> programs)

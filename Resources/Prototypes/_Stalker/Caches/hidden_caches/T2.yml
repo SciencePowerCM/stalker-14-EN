@@ -107,7 +107,7 @@
           prob: 0.25
         - id: STOintment
           prob: 0.25
-        - id: Tourniquet
+        - id: STTourniquet # stalker-14-en
           prob: 0.1
         - id: antiradpill
           prob: 0.1
@@ -127,7 +127,7 @@
           prob: 0.04
         - id: HandheldGPSBasic
           prob: 0.04
-        - id: BoxArtcont
+        - id: BoxArtcontDamaged # EN
           prob: 0.03
         - id: STFlashlightSeclite
           prob: 0.04

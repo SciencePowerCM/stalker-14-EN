@@ -1,13 +1,13 @@
 - type: weather
   id: STRain
   sprite:
-    sprite: /Textures/_Stalker/Effects/weather.rsi
+    sprite: /Textures/_Stalker_EN/Effects/weather.rsi # EN
     state: rain
 
 - type: weather
   id: STStorm
   sprite:
-    sprite: /Textures/_Stalker/Effects/weather.rsi
+    sprite: /Textures/_Stalker_EN/Effects/weather.rsi # EN
     state: storm
 
 - type: entity
@@ -19,8 +19,8 @@
   components:
   - type: SpriteFade
   - type: Clickable
-  - type: Physics
-    bodyType: Static
+  # - type: Physics
+    # bodyType: Static
   - type: Sprite
     noRot: true
     sprite: /Textures/Effects/weather.rsi
@@ -79,6 +79,7 @@
   parent: BaseWeatherAdmeme
   components:
   - type: Sprite
+    sprite: /Textures/_Stalker_EN/Effects/weather.rsi # EN
     state: rain
 
 - type: entity
@@ -133,4 +134,5 @@
   parent: BaseWeatherAdmeme
   components:
   - type: Sprite
+    sprite: /Textures/_Stalker_EN/Effects/weather.rsi # EN
     state: storm

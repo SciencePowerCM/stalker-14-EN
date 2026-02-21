@@ -1,5 +1,6 @@
 - type: shopPreset
   id: STMeatShopPreset
+  minSellPrice: 0
   itemsForSale:
     # cooked meat
     FoodMeatDogCooked: 1
@@ -34,11 +35,11 @@
         StalkerFoodKlukva: 5
         StalkerFoodMalina: 5
         StalkerFoodKlubnika: 5
+        BookOldJournal: 15
     - name: FAMINE
       priority: 2
       items:
-        DrinkIcedTeaCan: 5
-        ViolinInstrument: 20
-        ToyGygax: 20
-        ClothingNeckLGBTPin: 15
-        ClothingNeckStoleChaplain: 100
+        FoodSnackSemki: 3
+        ClothingHeadHatCowboyGrey: 15
+        PlushieSharkGrey: 20
+        STWeaponPistolDesertEagle: 150

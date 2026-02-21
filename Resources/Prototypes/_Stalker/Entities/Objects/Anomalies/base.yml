@@ -21,6 +21,7 @@
         layer:
           - MobLayer
           - LowImpassable
+          - HighImpassable
   - type: ZoneArtifactDetectorTarget
   - type: ZoneArtifactSpawner
   - type: Tag
@@ -28,3 +29,4 @@
     - HideContextMenu
   - type: STAnomalyTips
   - type: ESViewconeOccludable
+  - type: IgnorePredictionHit

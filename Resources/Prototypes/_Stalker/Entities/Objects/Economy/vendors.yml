@@ -88,6 +88,7 @@
   id: VendingMachineRestockMilitary
   name: Снабжение военных
   description: Ящик со всем, что вам нужно для уничтожения нелегалов.
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -247,6 +248,7 @@
   id: VendingMachineRestockUN
   name: Снабжение ООН
   description: Ящик со всем, что вам нужно для выражения беспокойства.
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -317,6 +319,7 @@
   id: VendingMachineRestockLaborer
   name: Снабжение ящиков грузчиков
   description: Ящик с ящиками для грузчиков
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -343,8 +346,10 @@
       dispenseOnHitThreshold: 2
       offState: off
       brokenState: broken
-    - type: ApcPowerReceiver
-      needsPower: False
+    # stalker-en-changes
+    #- type: ApcPowerReceiver
+    #  needsPower: False
+    # stalker-en-changes-end
     - type: Sprite
       sprite: _Stalker/Objects/Decoration/military_lot_of_boxes.rsi
       layers:
@@ -389,6 +394,7 @@
   id: MilitaryPSZInventoryRestock
   name: комплект ПСЗ пополнительный
   description: Класть на склад.
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -419,8 +425,10 @@
       dispenseOnHitThreshold: 2
       offState: off
       brokenState: broken
-    - type: ApcPowerReceiver
-      needsPower: False
+    #stalker-en-changes
+    #- type: ApcPowerReceiver
+    #  needsPower: False
+    #stalker-en-changes-end
     - type: Sprite
       sprite: _Stalker/Objects/Decoration/military_green_box.rsi
       layers:
@@ -464,6 +472,7 @@
   id: MilitaryPSZInventoryRestockOfficer
   name: комплект ПСЗ офицерский пополнительный
   description: Класть в офицерский ящик.
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -490,7 +499,7 @@
       access: [["Monolith"]]
     - type: VendingMachine
       ejectDelay: 0.1
-      pack: MonolithInventory
+      pack: MonolithInventoryEN #EN
       dispenseOnHitChance: 0.0
       dispenseOnHitThreshold: 2
       offState: off
@@ -520,6 +529,7 @@
   id: MonolithInventoryRestock
   name: пополнительный ящик «Монолита»
   description: Класть на склад.
+  categories: [ StSkipRestockTest ]
   components:
     - type: VendingMachineRestock
       canRestock:
@@ -594,8 +604,10 @@
       dispenseOnHitThreshold: 2
       offState: off
       brokenState: broken
-    - type: ApcPowerReceiver
-      needsPower: False
+    #stalker-en-changes
+    #- type: ApcPowerReceiver
+    #  needsPower: False
+    #stalker-en-changes
     - type: Sprite
       sprite: _Stalker/Objects/Decoration/military_green_box.rsi
       layers:
@@ -776,7 +788,8 @@
 - type: vendingMachineInventory
   id: FreedomComplect
   startingInventory:
-    FreedomCrate: 8
+    #FreedomCrate: 8 # Stalker-EN-TODO: This prototype does not exist! Temporary replaced with placeholder "Pen"
+    Pen: 8
 
 #ЗАВЕТ
 
@@ -926,7 +939,8 @@
 - type: vendingMachineInventory
   id: DolgComplect
   startingInventory:
-    DutyCrate: 8
+    #DutyCrate: 8 # Stalker-EN-TODO: This prototype does not exist! Temporary replaced with placeholder "Pen"
+    Pen: 8
 
 - type: entity
   parent: VendingMachine

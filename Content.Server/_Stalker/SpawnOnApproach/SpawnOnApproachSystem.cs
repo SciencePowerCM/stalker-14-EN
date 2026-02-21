@@ -5,7 +5,9 @@ using Content.Server.Explosion.EntitySystems;
 using Content.Shared.Maps;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Physics;
+using Content.Shared.Trigger;
 using Robust.Shared.Map;
+using Robust.Shared.Player; // ST14-EN: Addition
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -28,7 +30,7 @@ public sealed class SpawnOnApproachSystem : EntitySystem
 
     private void OnInit(Entity<SpawnOnApproachComponent> entity, ref ComponentInit args)
     {
-        if(_timing.CurTime < entity.Comp.MinStartAction)
+        if (_timing.CurTime < entity.Comp.MinStartAction)
             return;
         // Check components with instant spawn
         if (!entity.Comp.InstantSpawn)
@@ -41,7 +43,7 @@ public sealed class SpawnOnApproachSystem : EntitySystem
         if (!entity.Comp.Enabled)
             return;
 
-        if(_timing.CurTime < entity.Comp.MinStartAction)
+        if (_timing.CurTime < entity.Comp.MinStartAction)
             return;
 
         SpawnWithOffset(entity);
@@ -66,14 +68,13 @@ public sealed class SpawnOnApproachSystem : EntitySystem
         for (var i = 0; i < amount; i++)
         {
             var initialCoords = xform.Coordinates;
-            var offsetCoords = RandomizeCoords(comp, initialCoords);
 
-            if (CheckBlocked(offsetCoords))
-                offsetCoords = !comp.SpawnInside ? RandomizeUntilCorrect(comp, initialCoords) : initialCoords;
+            // ST14-EN: Just made this call RandomizeUntilCorrect
+            initialCoords = RandomizeUntilCorrect(comp, initialCoords);
 
             // Randomizing entity
             var proto = _random.Pick(comp.EntProtoIds);
-            Spawn(proto, offsetCoords);
+            Spawn(proto, initialCoords);
         }
         if (TryComp<ApproachTriggerComponent>(entity, out var approach))
             approach.Enabled = false;
@@ -84,19 +85,33 @@ public sealed class SpawnOnApproachSystem : EntitySystem
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private EntityCoordinates RandomizeCoords(SpawnOnApproachComponent comp, EntityCoordinates initial)
     {
-        var offset = _random.NextFloat(comp.MinOffset, comp.MaxOffset);
-        var xOffset = _random.NextFloat(-offset, offset);
-        var yOffset = _random.NextFloat(-offset, offset);
-        return initial.Offset(new Vector2(xOffset, yOffset));
+        // ST14-EN: commented out
+        // var offset = _random.NextFloat(comp.MinOffset, comp.MaxOffset);
+        // var xOffset = _random.NextFloat(-offset, offset);
+        // var yOffset = _random.NextFloat(-offset, offset);
+        // return initial.Offset(new Vector2(xOffset, yOffset));
+
+        // This is slightly more expensive but it gives a more even distribution compared to naively doing the above
+        var lightningDistance = MathF.Sqrt(_random.NextFloat() * (comp.MaxOffset - comp.MinOffset) + comp.MinOffset);
+        return initial.Offset(_random.NextAngle().ToVec() * lightningDistance);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private EntityCoordinates RandomizeUntilCorrect(SpawnOnApproachComponent comp, EntityCoordinates initial)
     {
-        var offset = new EntityCoordinates();
-        while (CheckBlocked(offset) && CheckEntities(offset, comp))
+        var triesSoFar = 0; // ST14-EN Addition
+        var offset = initial;
+
+
+
+        // ST14-EN: Made this all `||` instead of `&&`, so you keep retrying if any of these return true
+        while (CheckBlocked(offset, comp /* ST14-EN Addition */) || CheckEntities(offset, comp) || CheckPlayerNearby(offset, comp) /* ST14-EN Addition */)
         {
             offset = RandomizeCoords(comp, initial);
+
+            // ST14-EN Addition: infinite-loop check:
+            if (++triesSoFar == 15)
+                return initial;
         }
 
         return offset;
@@ -104,7 +119,7 @@ public sealed class SpawnOnApproachSystem : EntitySystem
 
     private bool CheckEntities(EntityCoordinates coords, SpawnOnApproachComponent comp)
     {
-        var tile = coords.GetTileRef();
+        var tile = _turf.GetTileRef(coords);
         if (tile == null)
             return false;
 
@@ -118,10 +133,30 @@ public sealed class SpawnOnApproachSystem : EntitySystem
         }
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool CheckBlocked(EntityCoordinates coords)
+
+    // ST14-EN: Addition
+    private bool CheckPlayerNearby(in EntityCoordinates coords, SpawnOnApproachComponent comp)
     {
-        var tile = coords.GetTileRef();
+        if (comp.SpawnNearPlayers)
+            return false;
+
+        var actorQuery = GetEntityQuery<ActorComponent>();
+        foreach (var uid in _lookupSystem.GetEntitiesInRange(coords, comp.MinOffset * 0.75f, flags: LookupFlags.Approximate | LookupFlags.Dynamic))
+        {
+            if (actorQuery.HasComponent(uid))
+                return true;
+        }
+
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool CheckBlocked(EntityCoordinates coords, SpawnOnApproachComponent comp /* ST14-EN Addition */)
+    {
+        if (comp.SpawnInside)
+            return false;
+
+        var tile = _turf.GetTileRef(coords);
 
         return tile != null && _turf.IsTileBlocked(tile.Value, CollisionGroup.Impassable);
     }
