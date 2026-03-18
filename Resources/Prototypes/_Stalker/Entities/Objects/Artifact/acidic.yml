@@ -78,7 +78,6 @@
         Caustic: 0.75
         Asphyxiation: 1.1
 
-
 - type: entity
   parent: BaseArtifact
   name: Ломоть мяса
@@ -97,6 +96,21 @@
     energy: 2.5
     color: "#7fff00"
     castShadows: false
+  - type: Edible # EN
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 60
+        reagents:
+        - ReagentId: Saline
+          Quantity: 20
+        - ReagentId: Protein
+          Quantity: 20
+        - ReagentId: Fat
+          Quantity: 20
+  - type: FlavorProfile
+    flavors:
+      - bad
   - type: PersonalDamage
     damage:
       types:
@@ -118,6 +132,119 @@
         Poison: 0.75
         Caustic: 0.65
         Asphyxiation: 1.15
+
+- type: entity
+  parent: BaseArtifact
+  name: Слизь
+  id: ZoneArtifactToxic
+  suffix: Stalker, Слизь
+  components:
+  - type: Sprite
+    state: toxic
+    scale: 0.5, 0.5
+  - type: ZoneArtifact
+    anomaly: ZoneAnomalyKissel
+  - type: ZoneArtifactDetectorTarget
+    detectedLevel: 1
+  - type: PointLight
+    radius: 1.5
+    energy: 2.5
+    color: "#7fff00"
+    castShadows: false
+  - type: STWeight
+    self: 5
+  - type: Butcherable
+    spawned:
+    - id: CartridgeShotgunToxicShard
+      amount: 3
+  - type: PersonalDamage
+    damage:
+      types:
+        Bloodloss: -0.5
+        Radiation: -0.3
+        Caustic: 0.8
+    interval: 1
+  - type: Armor
+    hiddenExamine: true
+    armorClass: 2
+    modifiers:
+      coefficients:
+        Slash: 1.1
+
+## toxic bullet shit
+
+- type: entity
+  id: STPelletToxicShard
+  name: septic shard
+  parent: STBasePellet
+  components:
+  - type: Projectile
+    projectileClass: 3
+    damage:
+      types:
+        Piercing: 2
+        Mutant: 55 # this one is just right?
+
+- type: entity
+  id: BulletShotgunToxicShard
+  name: bullet (septic shard)
+  parent: STPelletToxicShard
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: ProjectileSpread
+    proto: STPelletToxicShard
+    count: 6
+    spread: 12
+
+- type: entity
+  id: CartridgeShotgunToxicShard
+  name: septic shard
+  parent: BaseShotgunBullet
+  components:
+  - type: CartridgeAmmo
+    proto: BulletShotgunToxicShard
+  - type: Sprite
+    sprite: _Stalker/Objects/artifacts.rsi
+    layers:
+    - state: toxic
+      map: [ "enum.AmmoVisualLayers.Base" ]
+      scale: 0.5,0.5
+
+## end toxic bullet shit
+
+- type: entity
+  parent: BaseArtifact
+  name: Цитоплазма
+  id: ZoneArtifactCytoplasm
+  suffix: Stalker, Цитоплазма
+  components:
+  - type: Sprite
+    state: cytoplasm
+    scale: 0.5, 0.5
+  - type: ZoneArtifact
+    anomaly: ZoneAnomalyKissel
+  - type: ZoneArtifactDetectorTarget
+    detectedLevel: 2
+  - type: PointLight
+    radius: 1.5
+    energy: 2.5
+    color: "#7fff00"
+    castShadows: false
+  - type: STWeight
+    self: 3
+  - type: PersonalDamage
+    damage:
+      types:
+        Bloodloss: -1
+        Radiation: -0.5
+        Psy: -0.25
+    interval: 1
+  - type: Armor
+    hiddenExamine: true
+    armorClass: 2
+    modifiers:
+      coefficients:
+        Psy: 0.9
 
 - type: entity
   parent: BaseArtifact
@@ -165,7 +292,7 @@
   suffix: Stalker, Пузырь
   components:
   - type: Sprite
-    state: baloon
+    state: buble
     scale: 0.5, 0.5
   - type: ZoneArtifact
     anomaly: ZoneAnomalyKissel

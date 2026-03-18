@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Content.Server._Stalker.Anomaly.Generation.Components;
+using Content.Shared._RD.Area;
 using Content.Shared._Stalker.Anomaly.Data;
 using Content.Shared.Maps;
 using Content.Shared.Physics;
@@ -20,10 +21,10 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
 {
     private static readonly ProtoId<TagPrototype> TagGenerationIntersectionSkip = "STAnomalyGenerationIntersectionSkip";
 
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly IEntityManager _entityManager = null!;
+    [Dependency] private readonly IMapManager _mapManager = null!;
+    [Dependency] private readonly IPrototypeManager _prototype = null!;
+    [Dependency] private readonly IRobustRandom _random = null!;
 
     public readonly STAnomalyGenerationOptions Options;
 
@@ -32,6 +33,8 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
     private readonly TransformSystem _transform;
     private readonly MapSystem _map;
     private readonly TurfSystem _turf;
+
+    private readonly RDAreaSystem _rdAreas;
 
     private readonly FrozenDictionary<EntProtoId, int> _anomalySizes;
 
@@ -51,6 +54,8 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
         _transform = _entityManager.System<TransformSystem>();
         _map = _entityManager.System<MapSystem>();
         _turf = _entityManager.System<TurfSystem>();
+
+        _rdAreas = _entityManager.System<RDAreaSystem>();
 
         // Hashing
         _anomalySizes = GetHashAnomalySize();
@@ -77,7 +82,7 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
             // Here we get the radius of the anomaly, we need to subtract 0.5,
             // which would not take into account the skeleton of the anomaly itself,
             // in fact we turn the volumetric object into an abstract point.
-            var size = (int)Math.Max(Math.Round(fixture.Shape.Radius) - 1, 0);
+            var size = int.Max((int) float.Round(fixture.Shape.Radius) - 1, 0);
 
             dictionary.Add(anomalyEntry.ProtoId, size);
         }
@@ -115,9 +120,6 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
                 // Anomaly don't spawn in anomalies
                 foreach (var takenCoord in GetAnomalyTiles(anomaly.Value, coords))
                 {
-                    if (!_tileCoordinatesSpawn.ContainsKey(takenCoord))
-                        continue;
-
                     _tileCoordinatesSpawn.Remove(takenCoord);
                 }
 
@@ -129,21 +131,29 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
         return result;
     }
 
+    // stalker-en-changes-start: Snapshot blocker data synchronously to fix collection modified exception.
+    // EntityQueryEnumerator is not safe across await boundaries. MakeOperation() can yield across ticks,
+    // during which other systems may modify the entity collection, causing InvalidOperationException.
     private async Task RemoveByBlockers()
     {
+        var blockerAreas = new List<Box2i>();
         var entities = _entityManager.EntityQueryEnumerator<STAnomalyGeneratorSpawnBlockerComponent, TransformComponent>();
-        var coordinatesToRemove = new List<Vector2i>();
 
-        while (entities.MoveNext(out _, out var blocker, out var transform))
+        while (entities.MoveNext(out var uid, out var blocker, out var transform))
         {
-            if (transform.MapID != Options.MapId)
+            if (_transform.GetMapId(uid) != Options.MapId)
                 continue;
 
             var position = _transform.GetWorldPosition(transform);
-            var coordinates = new Vector2i((int) position.X, (int) position.Y);
+            var coordinates = new Vector2i((int) Math.Floor(position.X), (int) Math.Floor(position.Y));
             var size = blocker.Size;
-            var box2 = new Box2i(coordinates.X - size, coordinates.Y - size, coordinates.X + size + 1, coordinates.Y + size);
+            blockerAreas.Add(new Box2i(coordinates.X - size, coordinates.Y - size, coordinates.X + size + 1, coordinates.Y + size + 1));
+        }
 
+        var coordinatesToRemove = new List<Vector2i>();
+
+        foreach (var box2 in blockerAreas)
+        {
             for (var x = box2.Left; x < box2.Right; x++)
             {
                 for (var y = box2.Bottom; y < box2.Top; y++)
@@ -162,8 +172,10 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
         foreach (var coord in coordinatesToRemove)
         {
             _tileCoordinates.Remove(coord);
+            _tileCoordinatesSpawn.Remove(coord);
         }
     }
+    // stalker-en-changes-end
 
     private async Task LoadTiles()
     {
@@ -176,6 +188,9 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
             foreach (var tileRef in allTiles)
             {
                 await MakeOperation();
+
+                if (_rdAreas.TryGetArea(grid.Owner, tileRef.GridIndices, out Entity<RDAreaComponent> areaUid) && _entityManager.HasComponent<STAnomalyGeneratorSpawnBlockerComponent>(areaUid))
+                    continue;
 
                 if (TileSolidAndNotBlocked(tileRef))
                 {
@@ -193,8 +208,7 @@ public sealed partial class STAnomalyGenerationJob : Job<STAnomalyGenerationJobD
 
     private bool TileSolidAndNotBlocked(TileRef tile, Func<EntityUid, bool>? predicate = null)
     {
-        return _turf.GetContentTileDefinition(tile).Sturdy &&
-               !IsTileBlocked(tile, CollisionGroup.LowImpassable, predicate: predicate);
+        return _turf.GetContentTileDefinition(tile).Sturdy && !IsTileBlocked(tile, CollisionGroup.LowImpassable, predicate: predicate);
     }
 
     private static STAnomalyGeneratorAnomalyEntry? GetRandomAnomalyEntry(STAnomalyGenerationOptions options, IRobustRandom random)

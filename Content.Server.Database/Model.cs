@@ -52,6 +52,16 @@ namespace Content.Server.Database
         public DbSet<StalkerBand> StalkerBands { get; set; } = null!; // stalker-changes
         public DbSet<StalkerFaction> StalkerFactions { get; set; } = null!; // stalker-changes
         public DbSet<StalkerZoneOwnership> StalkerZoneOwnerships { get; set; } = null!; // stalker-changes
+        public DbSet<StalkerFactionRelation> StalkerFactionRelations { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerFactionRelationProposal> StalkerFactionRelationProposals { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerMessengerId> StalkerMessengerIds { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerMessengerContact> StalkerMessengerContacts { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerPdaPassword> StalkerPdaPasswords { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerNewsArticle> StalkerNewsArticles { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerNewsComment> StalkerNewsComments { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerNewsReaction> StalkerNewsReactions { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerCharacterRank> StalkerCharacterRanks { get; set; } = null!; // stalker-en-changes
+        public DbSet<StalkerNewsArticlePhoto> StalkerNewsArticlePhotos { get; set; } = null!; // stalker-en-changes
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Preference>()
@@ -363,6 +373,52 @@ namespace Content.Server.Database
                 .HasForeignKey(z => z.FactionId)
                 .OnDelete(DeleteBehavior.Cascade);
             // stalker-changes-ends
+
+            // stalker-en-changes-start
+            modelBuilder.Entity<StalkerFactionRelation>()
+                .HasKey(r => new { r.FactionA, r.FactionB });
+
+            modelBuilder.Entity<StalkerFactionRelationProposal>()
+                .HasKey(p => new { p.InitiatingFaction, p.TargetFaction });
+
+            modelBuilder.Entity<StalkerMessengerId>()
+                .HasKey(m => new { m.UserId, m.CharacterName });
+
+            modelBuilder.Entity<StalkerMessengerId>()
+                .HasIndex(m => m.MessengerId)
+                .IsUnique();
+
+            modelBuilder.Entity<StalkerMessengerContact>()
+                .HasKey(c => new { c.OwnerUserId, c.OwnerCharacterName, c.ContactUserId, c.ContactCharacterName });
+
+            modelBuilder.Entity<StalkerPdaPassword>()
+                .HasKey(p => p.CharacterName);
+
+            modelBuilder.Entity<StalkerNewsArticle>()
+                .HasKey(a => a.Id);
+
+            modelBuilder.Entity<StalkerNewsComment>()
+                .HasKey(c => c.Id);
+            modelBuilder.Entity<StalkerNewsComment>()
+                .HasIndex(c => c.ArticleId);
+
+            modelBuilder.Entity<StalkerNewsArticlePhoto>()
+                .HasKey(p => p.Id);
+            modelBuilder.Entity<StalkerNewsArticlePhoto>()
+                .HasIndex(p => p.PhotoId)
+                .IsUnique();
+
+            modelBuilder.Entity<StalkerNewsReaction>()
+                .HasKey(r => r.Id);
+            modelBuilder.Entity<StalkerNewsReaction>()
+                .HasIndex(r => new { r.TargetType, r.TargetId });
+            modelBuilder.Entity<StalkerNewsReaction>()
+                .HasIndex(r => new { r.TargetType, r.TargetId, r.UserId, r.ReactionId })
+                .IsUnique();
+
+            modelBuilder.Entity<StalkerCharacterRank>()
+                .HasKey(r => new { r.UserId, r.CharacterName });
+            // stalker-en-changes-end
 
             // Changes for modern HWID integration
             modelBuilder.Entity<Player>()
@@ -1486,6 +1542,238 @@ namespace Content.Server.Database
         /// </summary>
         public DateTime? LastCapturedByCurrentOwnerAt { get; set; }
     }
+
+    /// <summary>
+    /// Stores a faction relation override between two display factions.
+    /// Composite key: (FactionA, FactionB), always stored alphabetically.
+    /// </summary>
+    public sealed class StalkerFactionRelation
+    {
+        [Required]
+        public string FactionA { get; set; } = default!;
+
+        [Required]
+        public string FactionB { get; set; } = default!;
+
+        /// <summary>
+        /// Relation type stored as int (maps to STFactionRelationType enum).
+        /// </summary>
+        [Required]
+        public int RelationType { get; set; }
+    }
+
+    // stalker-en-changes-start
+    /// <summary>
+    /// Stores a pending faction relation proposal that requires bilateral confirmation.
+    /// Key: (InitiatingFaction, TargetFaction) -- direction matters.
+    /// </summary>
+    public sealed class StalkerFactionRelationProposal
+    {
+        [Required]
+        public string InitiatingFaction { get; set; } = default!;
+
+        [Required]
+        public string TargetFaction { get; set; } = default!;
+
+        /// <summary>
+        /// The proposed relation type (maps to STFactionRelationType enum).
+        /// </summary>
+        [Required]
+        public int ProposedRelationType { get; set; }
+
+        /// <summary>
+        /// Optional custom message from the initiating faction's leader (max ~250 chars).
+        /// </summary>
+        public string? CustomMessage { get; set; }
+
+        /// <summary>
+        /// UTC timestamp when the proposal was created.
+        /// </summary>
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>
+        /// Whether the proposal and its intermediate states should be broadcast to all players.
+        /// </summary>
+        [Required]
+        public bool Broadcast { get; set; }
+    }
+    // stalker-en-changes-end
+
+    // stalker-en-changes-start: Messenger ID + Contact persistence
+    /// <summary>
+    /// Stores a persistent messenger ID for a (user, character name) pair.
+    /// Each user+character combination gets a unique "XXX-XXX" format ID that persists across rounds.
+    /// Composite key: (UserId, CharacterName).
+    /// </summary>
+    public sealed class StalkerMessengerId
+    {
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required]
+        public string CharacterName { get; set; } = default!;
+
+        [Required]
+        public string MessengerId { get; set; } = default!;
+    }
+
+    /// <summary>
+    /// Stores a unidirectional contact relationship between two characters.
+    /// Composite key: (OwnerUserId, OwnerCharacterName, ContactUserId, ContactCharacterName).
+    /// </summary>
+    public sealed class StalkerMessengerContact
+    {
+        [Required]
+        public Guid OwnerUserId { get; set; }
+
+        [Required]
+        public string OwnerCharacterName { get; set; } = default!;
+
+        [Required]
+        public Guid ContactUserId { get; set; }
+
+        [Required]
+        public string ContactCharacterName { get; set; } = default!;
+
+        /// <summary>
+        /// Last-known faction name of the contact at time of add or last DM interaction.
+        /// Null if the contact was offline or had no faction when added.
+        /// </summary>
+        public string? FactionName { get; set; } // stalker-en-changes
+    }
+
+    /// <summary>
+    /// Stores a persistent PDA password for a character name.
+    /// Survives entity deletion (e.g. personal stash store/retrieve).
+    /// </summary>
+    public sealed class StalkerPdaPassword
+    {
+        [Required, Key]
+        public string CharacterName { get; set; } = default!;
+
+        [Required]
+        public string Password { get; set; } = default!;
+    }
+
+    /// <summary>
+    /// Stores a published Stalker News article. Persists across rounds.
+    /// </summary>
+    public sealed class StalkerNewsArticle
+    {
+        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        public string Title { get; set; } = default!;
+
+        [Required]
+        public string Content { get; set; } = default!;
+
+        [Required]
+        public string Author { get; set; } = default!;
+
+        public int RoundId { get; set; }
+
+        /// <summary>Stored as TimeSpan.Ticks for precision.</summary>
+        public long PublishTimeTicks { get; set; }
+
+        public int EmbedColor { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary>Optional photo attached to this article.</summary>
+        public Guid? PhotoId { get; set; }
+    }
+
+    /// <summary>
+    /// Stores a photo attached to a Stalker News article. Persists across rounds.
+    /// </summary>
+    public sealed class StalkerNewsArticlePhoto
+    {
+        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        public Guid PhotoId { get; set; }
+
+        [Required]
+        public byte[] PhotoData { get; set; } = Array.Empty<byte>();
+
+        public DateTime CreatedAt { get; set; }
+    }
+
+    /// <summary>
+    /// Stores a flat comment on a Stalker News article. Persists across rounds.
+    /// </summary>
+    public sealed class StalkerNewsComment
+    {
+        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        public int ArticleId { get; set; }
+
+        [Required]
+        public string Author { get; set; } = default!;
+
+        [Required]
+        public string Content { get; set; } = default!;
+
+        public int RoundId { get; set; }
+
+        /// <summary>Stored as TimeSpan.Ticks for precision.</summary>
+        public long PostedTimeTicks { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public string? AuthorFaction { get; set; }
+    }
+
+    /// <summary>
+    /// Stores a single reaction from a player to a news target (article or comment).
+    /// Unique constraint: (TargetType, TargetId, UserId, ReactionId).
+    /// </summary>
+    public sealed class StalkerNewsReaction
+    {
+        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        /// <summary>0 = Article, 1 = Comment (reserved for future use).</summary>
+        [Required]
+        public int TargetType { get; set; }
+
+        [Required]
+        public int TargetId { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required]
+        public string ReactionId { get; set; } = default!;
+
+        public DateTime CreatedAt { get; set; }
+    }
+    // stalker-en-changes-end
+
+    // stalker-en-changes-start: Character rank persistence
+    /// <summary>
+    /// Stores cumulative active playtime for a (user, character name) pair,
+    /// used to derive the character's rank tier.
+    /// Composite key: (UserId, CharacterName).
+    /// </summary>
+    public sealed class StalkerCharacterRank
+    {
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required]
+        public string CharacterName { get; set; } = default!;
+
+        [Required]
+        public TimeSpan TimeSpent { get; set; }
+    }
+    // stalker-en-changes-end
 
     #endregion
 }

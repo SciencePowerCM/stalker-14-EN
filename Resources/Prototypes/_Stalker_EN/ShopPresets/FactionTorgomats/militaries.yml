@@ -1,4 +1,4 @@
-﻿- type: shopPreset
+- type: shopPreset
   id: MilitaryPremiumShopPresetEN # PENDING REWORK
   minSellPrice: 0
   itemsForSale:
@@ -82,6 +82,7 @@
       STWeaponRifleAKM: 3000
       #STWeaponRifleASVAL: 15000 Fuck the ASVAL
       STWeaponSniperVSS: 12000
+      STWeaponRevolverSWPC325TR: 350
 
   - name: shop-category-magazines
     priority: 2
@@ -108,6 +109,7 @@
       BasePMMag: 70
       TTMag: 98
       BaseAPSMag: 100
+      STSpeedLoader357MagnumEmpty: 60
 
   - name: shop-category-ammunition
     priority: 3
@@ -141,6 +143,9 @@
       # 7.54
       754FMJBox: 675
       754HPBox: 1015
+      # .357
+      MagazineBox357Magnum: 260 # T2
+      MagazineBox357MagnumAP: 500 # T3
 
   - name: shop-category-armor
     priority: 4
@@ -212,7 +217,7 @@
       HandheldGPSBasic: 50
       Paper: 2
       Pen: 5
-      Binocularus1: 2500
+      Binocularus1: 1000
       BoxFlare: 60
       ClothingBackpackDuffelGreenStalkerHydroponic: 500
       Beaker: 40
@@ -227,6 +232,11 @@
       STElasticRubberRed: 50
       STElasticRubberGreen: 50
       STElasticRubberBlue: 50
+      # Cameras
+      STCamera: 750
+      STCameraVintage: 1200
+      STCameraDamaged: 400
+      STCameraFilm: 150
 
   - name: shop-category-provisions
     priority: 9
@@ -487,6 +497,7 @@
       ClothingBackpackDuffelBlackTacticStalker: 1000 # T4
       # Belts
       ClothingBeltGreenWebbingStalker: 250
+      ClothingBeltWebbingOfficerStalker: 400
       ClothingBeltBandolierStalker: 20 # T1 - PVE
       ClothingBeltTarzanBlack: 200 # T1 - PVP
       ClothingBeltTarzanGreen: 200 # T1 - PVP
@@ -530,7 +541,8 @@
       HandheldGPSBasic: 50
       Paper: 2
       Pen: 5
-      Binocularus1: 2500
+      BoxFolderClipboardEmpty: 20 # Clipboard
+      Binocularus1: 1000
       BoxFlare: 60
       ClothingBackpackDuffelGreenStalkerHydroponic: 500
       Beaker: 40
@@ -543,6 +555,14 @@
       STSkinsKitMilitary: 500
       AccordionInstrument: 500
       FoldedFlagMili: 250
+      STElasticRubberRed: 50
+      STElasticRubberGreen: 50
+      STElasticRubberBlue: 50
+      # Cameras
+      STCamera: 750
+      STCameraVintage: 1200
+      STCameraDamaged: 400
+      STCameraFilm: 150
 
   - name: shop-category-modules
     priority: 11
@@ -597,6 +617,7 @@
       Paper: 5
       Pen: 5
       LuxuryPen: 15
+      BoxFolderClipboardEmpty: 20 # Clipboard
 
   - name: "Morale Boosters"
     priority: 2

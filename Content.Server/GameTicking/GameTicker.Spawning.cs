@@ -5,6 +5,7 @@ using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.GameTicking.Events;
 using Content.Server.Ghost;
+using Content.Shared._Stalker_EN.CCVar;
 using Content.Server.Spawners.Components;
 using Content.Server.Speech.Components;
 using Content.Server.Station.Components;
@@ -431,6 +432,13 @@ namespace Content.Server.GameTicking
             }
 
             var ghost = _ghost.SpawnGhost(mind.Value, adminObserve: admin);
+
+            // stalker-changes-start: SpawnGhost may redirect to Respawn instead of spawning a ghost.
+            // When that happens it returns null and the mind has been wiped, so skip role assignment.
+            if (ghost == null)
+                return;
+            // stalker-changes-end
+
             if (makeObserver)
                 _roles.MindAddRole(mind.Value, "MindRoleObserver");
 
@@ -481,6 +489,8 @@ namespace Content.Server.GameTicking
             }
             // stalker-en-end
 
+            // stalker-en-end
+            
             if (_possiblePositions.Count != 0)
             {
                 // TODO: This is just here for the eye lerping.

@@ -60,6 +60,11 @@
         pullingItemTag: PliersStalker
         teethCount: 3
         initialTeeth: 3
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanLoner
+          Female: FemaleHumanLoner
+          Unsexed: MaleHumanLoner # stalker EN change end
 
 - type: chameleonOutfit
   id: StalkerChameleonOutfit
@@ -127,18 +132,17 @@
         pullingItemTag: PliersStalker
         teethCount: 3
         initialTeeth: 3
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanLoner
+          Female: FemaleHumanLoner
+          Unsexed: MaleHumanLoner # stalker EN change end
 
 - type: startingGear
   id: StalkerGear
   equipment:
     id: StalkerPDA
-    neck: ClothingNeckDogtagLoner # EN
-    belt: ClothingBeltBandolierStalker
-    shoes: ClothingShoesNovice
-    pocket1: STShiv
-    pocket2: 7mmBuckshotBox
-    mask: ClothingMaskGasMarlya
-    suitstorage: STWeaponShotgunMP155T
+    dogtag: ClothingNeckDogtagLoner # EN
 
 - type: stBand
   id: STStalkerBand

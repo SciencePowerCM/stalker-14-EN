@@ -38,6 +38,11 @@
       - type: NpcFactionMember
         factions:
         - ClearSky
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanLoner
+          Female: FemaleHumanLoner
+          Unsexed: MaleHumanLoner # stalker EN change end
 
 - type: job
   id: StalkerHeadClearSky
@@ -79,68 +84,23 @@
     - type: NpcFactionMember
       factions:
       - ClearSky
-
-- type: job
-  id: StalkerClearSkyHead
-  name: job-clearsky-head
-  icon: cn
-  description: job-clearsky-desc
-  playTimeTracker: StalkerClearSkyHead
-  whitelisted: true
-  requirements:
-    # - !type:RoleTimeRequirement
-    #   role: JobClearSky
-    #   time: 1
-    - !type:SpeciesRequirement
-      species:
-      - Human
-      - Dwarf
-  startingGear: StalkerClearSkyGear
-  supervisors: job-clearsky-supervisor
-  canBeAntag: false
-  special:
-    - !type:AddComponentSpecial
-      components:
-      - type: Access
-        tags:
-          - CN
-      - type: Bands
-        band: Stalker
-        bandIcon: cn
-        bandProto: STClearSkyBand
-        bandRankId: 2
-      - type: BlockTackingHolyItems
-      - type: TeethPull
-        teethProto: ToothStalker
-        pullingItemTag: PliersStalker
-        teethCount: 3
-        initialTeeth: 3
-
+    - type: Vocal # stalker EN change start
+      sounds:
+        Male: MaleHumanLoner
+        Female: FemaleHumanLoner
+        Unsexed: MaleHumanLoner # stalker EN change end
 
 - type: startingGear
   id: StalkerClearSkyGear
   equipment:
     id: ClearSkyPDA
-    neck: ClothingNeckDogtagClearSky # EN
-    belt: ClothingBeltStorageWaistbag
-    torso: ClothingTorsoSweaterStalkerGreen
-    legs: ClothingLegsJeansBlue
-    shoes: ClothingShoesBootsWork
-    outerClothing: ClothingOuterCoatBomber
-    back: ClothingBackpackDuffelBlackStalker
+    dogtag: ClothingNeckDogtagClearSky
 
-# EN
 - type: startingGear
   id: StalkerClearSkyGearHead
   equipment:
     id: ClearSkyPDA
-    neck: ClothingNeckDogtagClearSkyLeader
-    belt: ClothingBeltStorageWaistbag
-    torso: ClothingTorsoSweaterStalkerGreen
-    legs: ClothingLegsJeansBlue
-    shoes: ClothingShoesBootsWork
-    outerClothing: ClothingOuterCoatBomber
-    back: ClothingBackpackDuffelBlackStalker
+    dogtag: ClothingNeckDogtagClearSkyLeader
 
 - type: stBand
   id: STClearSkyBand

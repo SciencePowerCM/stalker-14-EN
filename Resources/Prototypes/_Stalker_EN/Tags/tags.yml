@@ -43,6 +43,15 @@
   id: Plate
 
 - type: Tag
+  id: STCookingRecipe
+
+- type: Tag
+  id: STCorn
+
+- type: Tag
+  id: STCameraFilm
+
+- type: Tag
   id: STElasticRubberRed
 
 - type: Tag
@@ -50,3 +59,19 @@
 
 - type: Tag
   id: STElasticRubberBlue
+
+- type: Tag
+  id: Cartridge357Magnum
+
+- type: Tag
+  id: SpeedLoader357Magnum
+
+# For ritual chasm, this is stuff related to the flesh mutant
+- type: Tag
+  id: STFleshRelated
+
+- type: Tag
+  id: STSugar
+
+- type: Tag
+  id: STYeast

@@ -6,6 +6,11 @@
     ZoneArtifactFireball: 400
     ZoneArtifactEye: 600
     ZoneArtifactFlame: 1200
+    ZoneArtifactBunch: 1421
+    ZoneArtifactRock: 1200
+    ZoneArtifactSun: 2200
+    ZoneArtifactRoot: 2400
+    ZoneArtifactConflagration: 600
     # Thermal group - 2
     ZoneArtifactCristall: 2400
     ZoneArtifactLithosphere: 4800
@@ -13,6 +18,9 @@
     ZoneArtifactSparkler: 400
     ZoneArtifactBattery: 600
     ZoneArtifactFlash: 1200
+    ZoneArtifactAccumulator: 1200
+    ZoneArtifactDiamond: 2200
+    ZoneArtifactCharger: 600
     ArtMoon: 2400
     ZoneArtifactTesla: 3600
     ZoneArtifactIce: 4800
@@ -24,6 +32,7 @@
     ZoneArtifactPebble: 400
     ZoneArtifactRosin: 600
     ZoneArtifactStoneCube: 845
+    ZoneArtifactDarkCube: 3600
     # Gravity group - 2
     ZoneArtifactVyvert: 400
     ZoneArtifactAmoeba: 600
@@ -35,7 +44,13 @@
     ZoneArtifactStuntman: 4800
     ZoneArtifactDistorter: 4800
     ZoneArtifactSoul: 3600
+    ZoneArtifactCompass: 2680
+    ZoneArtifactCrucifix: 3170
+    ZoneArtifactThorn: 1900
+    ZoneArtifactArf: 1900
     # Acidic group - 1
+    ZoneArtifactToxic: 450
+    ZoneArtifactCytoplasm: 1200
     ZoneArtifactBlood: 1200
     ZoneArtifactMeat: 2400
     ZoneArtifactKolobok: 3600
@@ -56,7 +71,7 @@
     MutantPartBearClaw: 90
     MutantPartBearPaw: 190
     MutantPartBearEye: 375
-    ClothingHeadBear: 600
+    ClothingHeadBear: 1500
 
     #T1 -------- Health * 1
     MutantPartBlindDogTail: 55
@@ -70,12 +85,14 @@
     MutantPartSnorkFoot: 315
     MutantPartFrogLeg: 90
 
-    #T3 -------- Health * 3
-    MutantPartBloodsuckerTentacles: 470
-    MutantPartOraculeEye: 1000
-    MutantPartPseudogiantHeart: 2500
-    MutantPartZombieHand: 380
-    MutantPartIzlomArm: 525
+    #T3 -------- Health * 3 Modified by Oracle
+    MutantPartBloodsuckerTentacles: 1770
+    MutantPartOraculeEye: 1200
+    MutantPartPseudogiantHeart: 3500
+    MutantPartZombieHand: 480
+    MutantPartIzlomArm: 625
+    MutantPartBurerBrain: 1000
+    MutantPartControllerBrain: 2000
 
   categories:
     - name: shop-category-weapons
@@ -119,6 +136,7 @@
         751Mag30: 500
         # .45
         STSpeedLoader45ACPEmpty: 90
+        STSpeedLoader357MagnumEmpty: 120
 
     - name: shop-category-ammunition
       priority: 3
@@ -132,9 +150,9 @@
         919PSTBox: 200 # T2
         919PBMBox: 1425 # T3
         # .45
-        45ACPLFMJBox: 100 # T1
-        45ACPMFMJBox: 250 # T2
-        45ACPAPBox: 1950 # T3
+        45ACPLFMJBox: 110 # T1
+        45ACPMFMJBox: 220 # T2
+        45ACPAPBox: 1500 # T3
         # 5.56
         556FMJBox: 300
         556M855Box: 1650 # T3
@@ -142,6 +160,10 @@
         # 7.51
         751M80Box: 1950 # T3
         751UNBox: 850 # Mutant
+        # .357
+        MagazineBox357Magnum: 300 # T2
+        MagazineBox357MagnumAP: 1400 # T3
+        MagazineBox357MagnumHP: 600 # Mutant
 
     - name: shop-category-medicine
       priority: 4
@@ -203,6 +225,8 @@
         ClothingBeltTarzanGreen: 200
         ClothingBeltTarzanOrange: 200
         ClothingBeltTarzanBlack: 200
+        ClothingBeltWebbingHolsterMerc: 1000
+        ClothingBeltWebbingHolsterMerc2: 1000
         # Medical Storage
         MedkitCMSStalker: 450
         MedkitGrizzlyStalker: 850
@@ -211,7 +235,17 @@
       priority: 8
       items:
         # Coats
-        ClothingOuterCoatDoshdevik: 100
+        ClothingCloakStalker: 30
+        ClothingCloakBeige: 1000
+        ClothingCloakBlack: 1000
+        ClothingCloakBrown: 1000
+        ClothingCloakGreen: 1000
+        ClothingCloakNavy: 1000
+        ClothingCloakShortCoverBlack: 1000
+        ClothingOuterCoatDoshdevik: 100 # T1
+        ClothingOuterCoatStalker: 1000
+        ClothingOuterCoatLoyalistLight: 2500
+        ClothingOuterCoatLoyalist: 3000
         ClothingOuterCoatKevlarMercenaries: 2750
         # Gas Masks
         ClothingMaskGasZarya: 100
@@ -254,6 +288,11 @@
         ClothingBackpackDuffelGreenStalkerHydroponic: 500
         ExtendedEmergencyOxygenTankFilledStalker: 50
         FoldedFlagMerc: 250
+        # Cameras
+        STCamera: 750
+        STCameraVintage: 1200
+        STCameraDamaged: 400
+        STCameraFilm: 150
 
     - name: shop-category-modules
       priority: 11
@@ -271,6 +310,7 @@
         Paper: 2
         Pen: 5
         MercBusinessCard: 10
+        BoxFolderClipboardEmpty: 50 # Clipboard
 
     - name: shop-category-grenades
       priority: 13

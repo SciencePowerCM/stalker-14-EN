@@ -136,10 +136,20 @@
   suffix: ST, mapping, Долг
   components:
   - type: AccessReader
-    access: [["Dolg"]]
+    access: [["Dolg"] , ["DolgNovice"]]
 
 - type: entity
   id: MetalAltDoorFalloutDolgClosed
+  name: стальная дверь
+  parent: MetalAltDoorFallout
+  description: Крепкая стальная дверь с надёжным замком.
+  suffix: ST, mapping, Долг
+  components:
+    - type: AccessReader
+      access: [["Dolg"] , ["DolgNovice"]]
+
+- type: entity
+  id: MetalAltDoorFalloutDolgOnlyClosed
   name: стальная дверь
   parent: MetalAltDoorFallout
   description: Крепкая стальная дверь с надёжным замком.
@@ -156,7 +166,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalAltDoorFalloutFreedomClosed
@@ -166,7 +176,18 @@
   suffix: ST, mapping, Свобода
   components:
     - type: AccessReader
+      access: [["Freedom"] , ["FreedomNovice"]]
+
+- type: entity
+  id: MetalAltDoorFalloutFreedomOnlyClosed
+  name: стальная дверь
+  parent: MetalAltDoorFallout
+  description: Крепкая стальная дверь с надёжным замком.
+  suffix: ST, mapping, Свобода
+  components:
+    - type: AccessReader
       access: [["Freedom"]]
+
 
 # Чистому небу
 
@@ -1009,7 +1030,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: HermoDverTypeTwoMercAndFreedomClosed
@@ -1019,7 +1040,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalDoorFalloutMercAndFreedomClosed
@@ -1029,7 +1050,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalAltDoorFalloutMercAndFreedomClosed
@@ -1039,7 +1060,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalWindowDoorFalloutMercAndFreedomClosed
@@ -1049,7 +1070,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalGrateDoorFalloutMercAndFreedomClosed
@@ -1059,7 +1080,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 - type: entity
   id: MetalBarDoorFalloutMercAndFreedomClosed
@@ -1069,7 +1090,7 @@
   suffix: ST, mapping, Свобода
   components:
   - type: AccessReader
-    access: [["Freedom"]]
+    access: [["Freedom"] , ["FreedomNovice"]]
 
 # ветерану
 

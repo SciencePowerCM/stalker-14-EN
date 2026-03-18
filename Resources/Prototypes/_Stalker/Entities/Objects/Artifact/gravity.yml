@@ -67,6 +67,34 @@
         Blunt: 0.7
         Slash: 0.7
 
+# t5 so look at it again later
+- type: entity
+  parent: BaseArtifactStorage
+  id: ZoneArtifactDarkCube
+  suffix: Stalker, Тёмный куб
+  components:
+  - type: Sprite
+    state: dark_cube
+    scale: 0.5, 0.5
+  - type: ZoneArtifact
+    anomaly: ZoneAnomalyPulse
+  - type: ZoneArtifactDetectorTarget
+    detectedLevel: 5
+  - type: PointLight
+    radius: 1.5
+    energy: 6
+    color: "#000000"
+    castShadows: false
+  - type: Storage
+    grid:
+      - 0,0,8,8
+    blacklist:
+      tags:
+      - STArtifact
+    maxItemSize: Small # maybe switch to tiny idk
+  - type: STWeight
+    self: 30
+
 - type: entity
   name: Ночная звезда
   parent: BaseArtifact

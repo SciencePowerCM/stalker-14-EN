@@ -11,7 +11,7 @@
     MutantPartBlindDogTail: 180
     MutantPartFleshEye: 405
     FoodMeatSpiderLeg: 100
-    MutantPartBearClaw: 400
+    MutantPartBearClaw: 490
     MutantPartCatGland: 580
 
     #T2 -------- Health * 1.8
@@ -23,13 +23,15 @@
     MutantPartBearPaw: 780
     MutantPartFrogLeg: 400
 
-    #T3 -------- Health * 3
-    MutantPartBloodsuckerTentacles: 1520
-    MutantPartOraculeEye: 3240
-    MutantPartPseudogiantHeart: 8100
-    MutantPartZombieHand: 1215
-    ClothingHeadBear: 1400
-    MutantPartIzlomArm: 1200
+    #T3 -------- Health * 3 Modified by Oracle
+    MutantPartBloodsuckerTentacles: 4700
+    MutantPartOraculeEye: 3600
+    MutantPartPseudogiantHeart: 18100
+    MutantPartZombieHand: 2000
+    ClothingHeadBear: 1500
+    MutantPartIzlomArm: 3750
+    MutantPartBurerBrain: 3500
+    MutantPartControllerBrain: 6500
 
   categories:
     - name: shop-category-weapons
@@ -49,7 +51,8 @@
         STWeaponRifleOC14: 5650
         STWeaponRifleAK103: 8000
         STWeaponRifleAKM: 6000
-        # STWeaponRifleA545Dolg: 7500 Removed till PvP Update
+        STWeaponRifleStalkerAK12Dolg: 6000
+        STWeaponRifleA545Dolg: 7500
         # SMGs
         STWeaponSMGPP91: 1200
         STWeaponSMGStalkerCP2Veresk: 2000
@@ -182,6 +185,17 @@
         ClothingMaskGasDolg2: 100 # T2
         ClothingMaskGP21: 1200 # T3
           # Cloaks
+        ClothingCloakStalker: 30
+        ClothingCloakBeige: 1000
+        ClothingCloakBlack: 1000
+        ClothingCloakBrown: 1000
+        ClothingCloakGreen: 1000
+        ClothingCloakNavy: 1000
+        ClothingCloakShortCoverBlack: 1000
+        ClothingOuterCoatDoshdevik: 100 # T1
+        ClothingOuterCoatStalker: 1000
+        ClothingOuterCoatLoyalistLight: 2500
+        ClothingOuterCoatLoyalist: 3000
         STClothingCapeDolgArmor: 2500 # T4
 
     - name: shop-category-research-equipment
@@ -229,6 +243,11 @@
         STElasticRubberGreen: 50
         STElasticRubberBlue: 50
         FoldedFlagDuty: 250
+        # Cameras
+        STCamera: 750
+        STCameraVintage: 1200
+        STCameraDamaged: 400
+        STCameraFilm: 150
 
     - name: shop-category-modules
       priority: 11

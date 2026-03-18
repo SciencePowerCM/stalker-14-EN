@@ -36,6 +36,11 @@
           pullingItemTag: PliersStalker
           teethCount: 3
           initialTeeth: 3
+        - type: Vocal # stalker EN change start
+          sounds:
+            Male: MaleHumanFreedom
+            Female: FemaleHumanFreedom
+            Unsexed: MaleHumanFreedom # stalker EN change end
 
 - type: job
   id: StalkerHeadFreedom
@@ -77,33 +82,29 @@
           pullingItemTag: PliersStalker
           teethCount: 3
           initialTeeth: 3
+        - type: Vocal # stalker EN change start
+          sounds:
+            Male: MaleHumanFreedom
+            Female: FemaleHumanFreedom
+            Unsexed: MaleHumanFreedom # stalker EN change end
 
 - type: startingGear
   id: FreedomGear
   equipment:
     id: FreedomPDA
-    neck: ClothingNeckDogtagFreedom # EN
-    legs: ClothingLegsJeansFreedomCamouflage
-    shoes: ClothingShoesBootsWork
-    torso: ClothingTorsoTurtlenecksFreedomCamouflage
-    back: ClothingBackpackDuffelGreenStalker
+    dogtag: ClothingNeckDogtagFreedom # EN
 
-# EN
 - type: startingGear
   id: FreedomGearHead
   equipment:
     id: FreedomPDA
-    neck: ClothingNeckDogtagFreedomAtaman # EN
-    legs: ClothingLegsJeansFreedomCamouflage
-    shoes: ClothingShoesBootsWork
-    torso: ClothingTorsoTurtlenecksFreedomCamouflage
-    back: ClothingBackpackDuffelGreenStalker
+    dogtag: ClothingNeckDogtagFreedomAtaman # EN
 
 - type: stBand
   id: STFreedomBand
   name: Freedom
   factionId: Freedom
-  maxMembers: 11
+  maxMembers: 21
   managingRankId: 2
   hierarchy:
     1: StalkerFreedom

@@ -36,6 +36,11 @@
       - type: NpcFactionMember
         factions:
         - Sci
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanEcologists
+          Female: FemaleHumanEcologists
+          Unsexed: MaleHumanEcologists # stalker EN change end
 
 - type: job
   id: sci
@@ -75,6 +80,11 @@
       - type: NpcFactionMember
         factions:
         - Sci
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanEcologists
+          Female: FemaleHumanEcologists
+          Unsexed: MaleHumanEcologists # stalker EN change end
 
 - type: job
   id: sci_decan
@@ -91,7 +101,7 @@
       species:
       - Human
       - Dwarf
-  startingGear: SciGearHead
+  startingGear: SciGear2
   supervisors: job-scientist-supervisor
   canBeAntag: false
   special:
@@ -114,6 +124,11 @@
       - type: NpcFactionMember
         factions:
         - Sci
+      - type: Vocal # stalker EN change start
+        sounds:
+          Male: MaleHumanEcologists
+          Female: FemaleHumanEcologists
+          Unsexed: MaleHumanEcologists # stalker EN change end
 
 - type: job
   id: sci_rector
@@ -130,7 +145,7 @@
       species:
       - Human
       - Dwarf
-  startingGear: SciGearHead
+  startingGear: SciGear3
   supervisors: job-scientist-supervisor
   canBeAntag: false
   special:
@@ -153,31 +168,17 @@
         - type: NpcFactionMember
           factions:
           - Sci
+        - type: Vocal # stalker EN change start
+          sounds:
+            Male: MaleHumanEcologists
+            Female: FemaleHumanEcologists
+            Unsexed: MaleHumanEcologists # stalker EN change end
 
 - type: startingGear
   id: SciGear
   equipment:
     id: ScientistPDA
-    neck: ClothingNeckDogtagEco # EN
-    legs: ClothingLegsJeansSandCargo
-    shoes: STClothingShoesBootsCombatFilled
-    torso: ClothingTorsoShirtWhiteScientific
-    outerClothing: ClothingOuterJacketSCI
-    gloves: ClothingHandsGlovesNitrile
-
-# EN
-- type: startingGear
-  id: SciGearHead
-  equipment:
-    id: ScientistPDA
-    neck: ClothingNeckDogtagEcoLeader # EN
-    legs: ClothingLegsJeansSandCargo
-    shoes: STClothingShoesBootsCombatFilled
-    torso: ClothingTorsoShirtWhiteScientific
-    outerClothing: ClothingOuterCoatRD
-    head: ClothingHeadHatBeretRND
-    eyes: ClothingEyesGlassesSunglasses
-    gloves: ClothingHandsGlovesNitrile
+    dogtag: ClothingNeckDogtagEco # EN
 
 - type: stBand
   id: STSciBand
@@ -214,12 +215,9 @@
   id: SciGear3
   equipment:
     id: ScientistPDA
-    legs: ClothingLegsJeansSandCargo
-    shoes: STClothingShoesBootsCombatFilled
-    torso: ClothingTorsoShirtWhiteScientific
+    dogtag: ClothingNeckDogtagEcoLeader # EN
     outerClothing: ClothingOuterCoatRD
     head: ClothingHeadBeretUN
-    eyes: ClothingEyesGlassesSunglasses
     gloves: ClothingHandsGlovesNitrile
 
 # - type: stBand # Stalker-TODO: Why not combine them all under "STSciBand" band prototype? Also, factionId "ScientistsRector" does not exist!

@@ -6,6 +6,11 @@
     ZoneArtifactFireball: 310
     ZoneArtifactEye: 510
     ZoneArtifactFlame: 1000
+    ZoneArtifactBunch: 1100
+    ZoneArtifactRock: 1000
+    ZoneArtifactSun: 2000
+    ZoneArtifactRoot: 2100
+    ZoneArtifactConflagration: 510
     # Thermal group - 2
     ZoneArtifactCristall: 2300
     ZoneArtifactLithosphere: 4700
@@ -13,6 +18,9 @@
     ZoneArtifactSparkler: 280
     ZoneArtifactBattery: 350
     ZoneArtifactFlash: 1220
+    ZoneArtifactAccumulator: 1220
+    ZoneArtifactDiamond: 2000
+    ZoneArtifactCharger: 350
     ArtMoon: 2100
     ZoneArtifactTesla: 3200
     ZoneArtifactIce: 4200
@@ -24,6 +32,7 @@
     ZoneArtifactPebble: 510
     ZoneArtifactRosin: 1000
     ZoneArtifactStoneCube: 700
+    ZoneArtifactDarkCube: 3400
     # Gravity group - 2
     ZoneArtifactVyvert: 260
     ZoneArtifactAmoeba: 450
@@ -35,7 +44,13 @@
     ZoneArtifactStuntman: 4200
     ZoneArtifactDistorter: 4200
     ZoneArtifactSoul: 2900
+    ZoneArtifactCompass: 2300
+    ZoneArtifactCrucifix: 3000
+    ZoneArtifactThorn: 1800
+    ZoneArtifactArf: 1800
     # Acidic group - 1
+    ZoneArtifactToxic: 400
+    ZoneArtifactCytoplasm: 1520
     ZoneArtifactBlood: 1520
     ZoneArtifactMeat: 3140
     ZoneArtifactKolobok: 4760
@@ -52,8 +67,8 @@
     MutantPartOldBoarHoof: 350 # T3
 
     #Bears ---------
-    MutantPartBearClaw: 150
-    MutantPartBearPaw: 320
+    MutantPartBearClaw: 190
+    MutantPartBearPaw: 350
     MutantPartBearEye: 480
     ClothingHeadBear: 650
 
@@ -70,11 +85,13 @@
     MutantPartFrogLeg: 150
 
     #T3 -------- Health * 3
-    MutantPartBloodsuckerTentacles: 500
-    MutantPartOraculeEye: 400
-    MutantPartPseudogiantHeart: 3400
-    MutantPartZombieHand: 450
-    MutantPartIzlomArm: 545
+    MutantPartBloodsuckerTentacles: 800
+    MutantPartOraculeEye: 1000
+    MutantPartPseudogiantHeart: 6400
+    MutantPartZombieHand: 650
+    MutantPartIzlomArm: 945
+    MutantPartBurerBrain: 1500
+    MutantPartControllerBrain: 2500
 
     #Value
     STJewelrySilver: 400
@@ -155,6 +172,7 @@
         556Mag30: 400
         TTMag: 100
         STSpeedLoader45ACPEmpty: 150
+        STSpeedLoader357MagnumEmpty: 160
         BaseAPSMag: 100
         Base751Mag10: 200
 
@@ -195,10 +213,14 @@
         754FMJBox: 2500 # T3
         754HPBox: 1350 # Mutant
         # .45
-        45ACPLFMJBox: 100 # T1
+        45ACPLFMJBox: 110 # T1
         45ACPMFMJBox: 550 # T2
-        45ACPAPBox: 1950 # T3
-        45ACPRIPBox: 800 # Mutant
+        45ACPAPBox: 1550 # T3
+        45ACPRIPBox: 750 # Mutant
+        # .357
+        MagazineBox357Magnum: 600 # T2
+        MagazineBox357MagnumAP: 1500 # T3
+        MagazineBox357MagnumHP: 800 # Mutant
 
     - name: shop-category-medicine # 50% discount from stalkers
       priority: 4
@@ -233,6 +255,7 @@
         CigPackSuka: 100
         FoodSTEgg: 75
         FoodSTTomato: 75
+        STDrinkJar: 300
 
     - name: shop-category-armor
       priority: 6
@@ -278,7 +301,17 @@
         ClothingOuterCoatPahan: 140 # T1
         ClothingOuterCoatKolchyga: 550 # T1
         ClothingOuterCoatBanditRedline: 3000 # T2 pvp
-        ClothingOuterCoatLoyalist: 2500 # T2
+        ClothingCloakStalker: 30
+        ClothingCloakBeige: 1000
+        ClothingCloakBlack: 1000
+        ClothingCloakBrown: 1000
+        ClothingCloakGreen: 1000
+        ClothingCloakNavy: 1000
+        ClothingCloakShortCoverBlack: 1000
+        ClothingOuterCoatDoshdevik: 100 # T1
+        ClothingOuterCoatStalker: 1000
+        ClothingOuterCoatLoyalistLight: 2500
+        ClothingOuterCoatLoyalist: 3000
           # Gasmasks
         ClothingMaskXoma: 100 # T1
         ClothingMaskGP5: 200 # T2
@@ -327,6 +360,12 @@
         STElasticRubberGreen: 50
         STElasticRubberBlue: 50
         FoldedFlagBand: 250
+        STRag: 10
+        # Cameras
+        STCamera: 750
+        STCameraVintage: 1200
+        STCameraDamaged: 400
+        STCameraFilm: 150
 
     - name: shop-category-modules
       priority: 11

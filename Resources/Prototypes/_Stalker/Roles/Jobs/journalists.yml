@@ -35,16 +35,23 @@
           pullingItemTag: PliersStalker
           teethCount: 3
           initialTeeth: 3
+        - type: Vocal # stalker EN change start
+          sounds:
+            Male: MaleHumanLoner
+            Female: FemaleHumanLoner
+            Unsexed: MaleHumanLoner # stalker EN change end
 
 - type: startingGear
   id: JurGear
   equipment:
     id: StalkerPDA
-    neck: ClothingNeckDogtagJournalist # EN
+    dogtag: ClothingNeckDogtagJournalist # EN
     torso: ClothingTorsoSweaterStalkerGreen
     legs: ClothingLegsJeansBlue
     shoes: STClothingShoesBootsCombatFilled
     back: ClothingBackpackDuffelGreenStalker
+    pocket1: WeaponPistolStalkerPM # EN
+    pocket2: 918PGJBox # EN
 - type: stBand
   id: STJournalistsBand
   name: Journalists

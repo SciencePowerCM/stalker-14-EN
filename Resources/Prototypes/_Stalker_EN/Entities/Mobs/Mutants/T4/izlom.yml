@@ -34,7 +34,7 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      700: Dead
+      3700: Dead
   - type: Damageable
     damageModifierSet: STMutantT4DamageModifierSet
   - type: SlowOnDamage
@@ -44,7 +44,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 700
+        damage: 3700
       behaviors:
       - !type:PlaySoundBehavior
         sound:
@@ -84,13 +84,58 @@
     needsHands: false
   - type: NPCRetaliation
     attackMemoryLength: 30 # 30 what?
-  - type: PassiveDamage
-    allowedStates:
-    - Alive
-    damageCap: 700
-    damage:
-      types:
-        Bloodloss: -0.75
   - type: NpcFactionMember
     factions:
     - Izlom
+  - type: PassiveDamage
+    allowedStates:
+    - Alive
+    - Critical
+    damage:
+      types:
+        Burn: -100
+        Toxin: -100
+        Airloss: -100
+        Psy: -100
+        Radiation: -100
+  - type: STMobVariantConfig
+    variants:
+    - chance: 0.08
+      quality: Uncommon
+      nameOverride: st-mob-variant-uncommon-izlom
+      healthMultiplier: 1.1
+      damageMultiplier: 1.1
+      spriteScale: 1.05
+      spriteTint: "#805030FF"
+      spriteSaturation: 1.5
+      spriteBrightness: 0.7
+      minWeightMultiplier: 0.95
+      maxWeightMultiplier: 1.25
+      butcherSwaps:
+        MutantPartIzlomArm: STMutantPartUncommonIzlomArm
+    - chance: 0.02
+      quality: Rare
+      nameOverride: st-mob-variant-rare-izlom
+      healthMultiplier: 1.2
+      damageMultiplier: 1.2
+      spriteScale: 1.1
+      spriteTint: "#E0D8FFFF"
+      spriteSaturation: 0.15
+      spriteBrightness: 1.6
+      minWeightMultiplier: 1.1
+      maxWeightMultiplier: 1.4
+      butcherSwaps:
+        MutantPartIzlomArm: STMutantPartRareIzlomArm
+    - chance: 0.001
+      quality: Legendary
+      nameOverride: st-mob-variant-legendary-izlom
+      healthMultiplier: 1.3
+      damageMultiplier: 1.3
+      spriteScale: 1.15
+      spriteTint: "#FFC040FF"
+      spriteSaturation: 1.3
+      spriteBrightness: 1.4
+      minWeightMultiplier: 1.3
+      maxWeightMultiplier: 1.6
+      butcherSwaps:
+        MutantPartIzlomArm: STMutantPartLegendaryIzlomArm

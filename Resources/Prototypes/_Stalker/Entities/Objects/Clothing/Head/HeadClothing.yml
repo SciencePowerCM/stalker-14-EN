@@ -30,12 +30,24 @@
   id: ClothingHeadBeretUN
   name: берет ООН
   description: Берет основного контингента ООН и старшего офицерского состава ОКСОП.
-  suffix: Stalker
+  suffix: ST, UN # EN
   components:
     - type: Sprite
       sprite: _Stalker/Objects/Clothing/hats/un_beret.rsi
     - type: Clothing
       sprite: _Stalker/Objects/Clothing/hats/un_beret.rsi
+
+- type: entity
+  parent: STClothingHeadBase
+  id: ClothingHeadBeretCN
+  name: берет Чистого Неба
+  description: Берет группировки Чистое Небо. Выполнен в характерном синем цвете, плавно переходящем в голубой.
+  suffix: Stalker
+  components:
+    - type: Sprite
+      sprite: _Stalker/Objects/Clothing/hats/cn_beret.rsi
+    - type: Clothing
+      sprite: _Stalker/Objects/Clothing/hats/cn_beret.rsi
 
 - type: entity
   parent: ClothingHeadBase
@@ -106,7 +118,7 @@
   id: ClothingHeadHatUN
   name: кепка ООН
   description: Кепка голубого цвета с символикой ООН, используется миротворцами.
-  suffix: Stalker
+  suffix: ST, UN # EN
   components:
   - type: Sprite
     sprite: _Stalker/Objects/Clothing/hats/uncap.rsi
@@ -118,7 +130,7 @@
   id: ClothingHeadHatUNModification
   name: кепка с гарнитурой ООН
   description: Кепка голубого цвета с символикой ООН, имеет гарнитуру. Используется миротворцами.
-  suffix: Stalker
+  suffix: ST, UN # EN
   components:
   - type: Sprite
     sprite: _Stalker/Objects/Clothing/hats/uncap_modification.rsi

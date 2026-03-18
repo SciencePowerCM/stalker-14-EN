@@ -30,6 +30,21 @@
   - type: Item
     sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/tt_treat.rsi
 
+# aps
+- type: entity
+  parent: WeaponPistolStalkerAPS
+  id: WeaponPistolStalkerAPSBare
+  name: APS "Bare"
+  description: An APS pistol chambered in 9x18mm ammunition. The unfinished metal is wrapped in white cloth tape.
+  suffix: ST
+  components:
+  - type: Clothing
+    sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/aps_bare.rsi
+  - type: Item
+    sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/aps_bare.rsi
+  - type: Sprite
+    sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/aps_bare.rsi
+
 # SHOTGUNS
 # spas
 - type: entity
@@ -60,6 +75,20 @@
     sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/l85_forecaster.rsi
   - type: Sprite
     sprite: _Stalker_EN/Objects/Weapons/Guns/_Skins/l85_forecaster.rsi
+
+# AK12
+- type: entity
+  parent: STWeaponRifleStalkerAK12en
+  id: STWeaponRifleStalkerAK12Dolg
+  name: AK-12 "Spear"
+  description: An AK-12 rifle clad in a red camouflage pattern. Chambered in 5.45x39. It seems to be commonly used by the Duty clan of stalkers.
+  components:
+  - type: Clothing
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/_Skins/ak12_dolg.rsi
+  - type: Item
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/_Skins/ak12_dolg.rsi
+  - type: Sprite
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/_Skins/ak12_dolg.rsi
 
 # SMGS
 # ppsh

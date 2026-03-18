@@ -1,11 +1,16 @@
 - type: shopPreset
-  id: KekeshaShopPresetEN # i miss my boy
+  id: KekeshaShopPresetEN # whimsy based pricing
   minSellPrice: 5
   itemsForSale:
     # Thermal group - 1
     ZoneArtifactFireball: 400
     ZoneArtifactEye: 600
     ZoneArtifactFlame: 1200
+    ZoneArtifactBunch: 1150
+    ZoneArtifactRock: 1000
+    ZoneArtifactSun: 1900
+    ZoneArtifactRoot: 2100
+    ZoneArtifactConflagration: 400
     # Thermal group - 2
     ZoneArtifactCristall: 2400
     ZoneArtifactLithosphere: 4800
@@ -13,6 +18,9 @@
     ZoneArtifactSparkler: 400
     ZoneArtifactBattery: 600
     ZoneArtifactFlash: 1200
+    ZoneArtifactAccumulator: 900
+    ZoneArtifactDiamond: 1900
+    ZoneArtifactCharger: 1900
     ArtMoon: 2400
     ZoneArtifactTesla: 3600
     ZoneArtifactIce: 4800
@@ -20,9 +28,11 @@
     ArtMedusa: 400
     ZoneArtifactFlower: 600
     ZoneArtifactNightStar: 2400
+    ZoneArtifactWhirlwind: 450
     ZoneArtifactPebble: 400
     ZoneArtifactRosin: 600
     ZoneArtifactStoneCube: 1200
+    ZoneArtifactDarkCube: 2800
     # Gravity group - 2
     ZoneArtifactVyvert: 400
     ZoneArtifactAmoeba: 600
@@ -34,7 +44,13 @@
     ZoneArtifactStuntman: 4800
     ZoneArtifactDistorter: 4800
     ZoneArtifactSoul: 3600
+    ZoneArtifactCompass: 2450
+    ZoneArtifactCrucifix: 2800
+    ZoneArtifactThorn: 2500 # kesha whimsy
+    ZoneArtifactArf: 410
     # Acidic group - 1
+    ZoneArtifactToxic: 500
+    ZoneArtifactCytoplasm: 2100
     ZoneArtifactBlood: 1200
     ZoneArtifactMeat: 2400
     ZoneArtifactKolobok: 3600
@@ -61,12 +77,12 @@
     MutantPartSnorkFoot: 350
 
     #T3 -------- Health * 3
-    MutantPartBloodsuckerTentacles: 525
-    MutantPartOraculeEye: 1120
+    MutantPartBloodsuckerTentacles: 725
+    MutantPartOraculeEye: 920
     MutantPartPseudogiantHeart: 2800
     MutantPartZombieHand: 420
-    MutantPartChimeraTooth: 750
-    ClothingMaskChimera: 3000
+    MutantPartChimeraTooth: 5570
+    ClothingMaskChimera: 8000
     MutantPartIzlomArm: 665
 
      #Weapons and armour ---- min cost / 2
@@ -154,6 +170,8 @@
 
     #values
     TradeBox: 3000
+    STFoodJarWholeEelFermented: 4500
+    STDrinkJarMoonshine: 650 # keshas eyes arent so good so he cant check to see if theres liquid in these
 
   categories:
     - name: shop-category-weapons
@@ -188,6 +206,7 @@
           # Other
         TTMag: 100
         STSpeedLoader45ACPEmpty: 300
+        STSpeedLoader357MagnumEmpty: 330
         BaseAPSMag: 100
     - name: shop-category-ammunition
       priority: 3
@@ -214,10 +233,14 @@
         545HPBox: 690
         545PCBox: 1500
          # .45
-        45ACPLFMJBox: 90
-        45ACPMFMJBox: 325
-        45ACPRIPBox: 750
-        45ACPAPBox: 1750
+        45ACPLFMJBox: 80
+        45ACPMFMJBox: 550
+        45ACPRIPBox: 625
+        45ACPAPBox: 1400
+        # .357
+        MagazineBox357Magnum: 350 # T2
+        MagazineBox357MagnumAP: 1600 # T3
+        MagazineBox357MagnumHP: 600 # Mutant
 
     - name: shop-category-armor
       priority: 4
@@ -324,3 +347,7 @@
         STModuleSilencerSMGT1: 1600
         STModuleSniperSightT1: 1600
         STModuleSilencerSniperT1: 1400
+        STModuleSilencerRiflesT2Ru: 4600
+        STModuleSilencerRiflesT2Nato: 4600
+        STModuleSilencerSniperT2: 4600
+        STModuleSilencerSMGT2: 4800

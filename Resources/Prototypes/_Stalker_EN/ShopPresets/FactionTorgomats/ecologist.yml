@@ -47,9 +47,9 @@
         919PSTBox: 180
         919RIPBox: 400
         # .45
-        45ACPRIPBox: 600
-        45ACPLFMJBox: 100
-        45ACPMFMJBox: 250
+        45ACPRIPBox: 450
+        45ACPLFMJBox: 90
+        45ACPMFMJBox: 200
         # 5.45
         545HPBox: 400
         545FMJBox: 270
@@ -138,6 +138,16 @@
       items:
           # Cloaks
         ClothingOuterCoatDoshdevik: 60 # T1
+        ClothingCloakStalker: 30
+        ClothingCloakBeige: 1000
+        ClothingCloakBlack: 1000
+        ClothingCloakBrown: 1000
+        ClothingCloakGreen: 1000
+        ClothingCloakNavy: 1000
+        ClothingCloakShortCoverBlack: 1000
+        ClothingOuterCoatStalker: 1000
+        ClothingOuterCoatLoyalistLight: 2500
+        ClothingOuterCoatLoyalist: 3000
           # Gasmasks
         ClothingMaskGasM40: 200 # T2
         ClothingMaskM51: 1000
@@ -164,11 +174,11 @@
         # ZoneArtifactDetectorBear: 8000 #T4 Disabled for now
 
         # RP Items / Anomaly Destructors
-        BaseMachineAnomalyDestructorFolded: 1250
-        BaseMachineAnomalyDestructorFolded1: 1250
-        BaseMachineAnomalyDestructorFolded2: 1250
-        BaseMachineAnomalyDestructorFolded3: 1250
-        BaseMachineAnomalyDestructorFolded4: 1250
+        BaseMachineAnomalyDestructorFolded: 450
+        BaseMachineAnomalyDestructorFolded1: 450
+        BaseMachineAnomalyDestructorFolded2: 450
+        BaseMachineAnomalyDestructorFolded3: 450
+        BaseMachineAnomalyDestructorFolded4: 450
 
     - name: shop-category-utilities
       priority: 10
@@ -187,6 +197,8 @@
         HandheldGPSBasic: 50
         Paper: 2
         Pen: 5
+        BoxFolderClipboardEmpty: 20 # Clipboard
+        STEcoClipboard: 20 # Cool Clipboard
         Binocularus1: 750
         BoxFlare: 60
         ClothingBackpackDuffelGreenStalkerHydroponic: 500
@@ -207,6 +219,11 @@
         STElasticRubberGreen: 50
         STElasticRubberBlue: 50
         FoldedFlagMili: 250
+        # Cameras
+        STCamera: 750
+        STCameraVintage: 1200
+        STCameraDamaged: 400
+        STCameraFilm: 150
 
     - name: shop-category-customization
       priority: 11

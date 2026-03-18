@@ -23,11 +23,15 @@ using Content.Shared.Paper;
 using Content.Shared.Stacks;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Server.Botany.Components;
+using Content.Shared._CD.Engraving;
 using Content.Shared._Stalker;
 using Content.Shared._Stalker.Storage;
 using Content.Shared.Charges.Components;
 using Content.Shared.Crayon;
+using Content.Shared.Labels.Components;
+using Content.Shared.NameModifier.EntitySystems;
 using Content.Shared.Power.Components;
+using Content.Shared._Stalker_EN.Camera; // stalker-en-changes: photo persistence
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Stalker.Storage;
@@ -40,6 +44,7 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
     [Dependency] private readonly StalkerRepositorySystem _stalkerRepositorySystem = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
+    [Dependency] private readonly NameModifierSystem _nameModifier = default!;
 
     private delegate List<object> DelegateItemStalkerConverter(EntityUid inputEntityUid);
 
@@ -93,6 +98,7 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
         _convertersItemStalker.Add("ME", ConverterSolutionItemStalker); // Solutions
         _convertersItemStalker.Add("MC", ConverterCartridgeItemStalker);
         _convertersItemStalker.Add("MR", ConverterCrayonItemStalker);
+        _convertersItemStalker.Add("MF", ConverterPhotoItemStalker); // stalker-en-changes: photo persistence
         // Доделать еще конвентеры для предметов с жидкостями и т.д.
 
         foreach (var migration in _prototype.EnumeratePrototypes<STStashMigrationPrototype>())
@@ -168,9 +174,18 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
             Components += "R";
         }
 
+        // stalker-en-changes-start
+        if (HasComp<STPhotoComponent>(InputItem))
+        {
+            Components += "F";
+        }
+        // stalker-en-changes-end
+
         if (_convertersItemStalker.ContainsKey(Components))
         {
-            return _convertersItemStalker[Components](InputItem);
+            var result = _convertersItemStalker[Components](InputItem);
+            ApplyCrossCuttingData(InputItem, result);
+            return result;
         }
         else
         {
@@ -255,6 +270,14 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
             }
         }
 
+        // stalker-en-changes-start
+        // Clamp to actual ammo count — prevents persisting stale entries from TakeAmmo desync
+        if (completeEntProtos.Count > ammoProvider.Count)
+        {
+            completeEntProtos.RemoveRange(0, completeEntProtos.Count - ammoProvider.Count);
+        }
+        // stalker-en-changes-end
+
         returnList.Add(new AmmoContainerStalker(
             GetPrototypeName(inputItem),
             ammoProvider.Proto,
@@ -321,6 +344,54 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
         return returnList;
     }
 
+    // stalker-en-changes-start
+    /// <summary>
+    /// Converts a photo entity into a <see cref="PhotoItemStalker"/> for stash persistence,
+    /// capturing the photo's unique ID and base64-encoded image data.
+    /// </summary>
+    private List<object> ConverterPhotoItemStalker(EntityUid item)
+    {
+        var returnList = new List<object>(0);
+        if (!TryComp<STPhotoComponent>(item, out var photo))
+            return returnList;
+
+        returnList.Add(new PhotoItemStalker(
+            GetPrototypeName(item),
+            photo.PhotoId.ToString(),
+            Convert.ToBase64String(photo.ImageData)));
+        return returnList;
+    }
+    // stalker-en-changes-end
+
+    /// <summary>
+    /// Applies cross-cutting component data (engraving, labels) to all storage items.
+    /// These components can appear on any item type, so they are handled uniformly
+    /// rather than in each individual converter.
+    /// </summary>
+    private void ApplyCrossCuttingData(EntityUid entity, List<object> storageItems)
+    {
+        var hasEngraving = TryComp<EngraveableComponent>(entity, out var engraveable);
+        var hasLabel = TryComp<LabelComponent>(entity, out var label);
+
+        if (!hasEngraving && !hasLabel)
+            return;
+
+        foreach (var item in storageItems)
+        {
+            if (item is not IItemStalkerStorage storage)
+                continue;
+
+            if (hasEngraving && !string.IsNullOrEmpty(engraveable!.EngravedMessage))
+            {
+                storage.EngravedMessage = engraveable.EngravedMessage;
+            }
+
+            if (hasLabel && !string.IsNullOrEmpty(label!.CurrentLabel))
+            {
+                storage.CurrentLabel = label.CurrentLabel;
+            }
+        }
+    }
 
     #endregion
 
@@ -480,6 +551,47 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
                     Dirty(inputItemUid, chargesComponent);
                 }
                 break;
+            // stalker-en-changes-start
+            case PhotoItemStalker photoOptions:
+                if (TryComp<STPhotoComponent>(inputItemUid, out var photoComp))
+                {
+                    if (Guid.TryParse(photoOptions.PhotoId, out var parsedPhotoId))
+                        photoComp.PhotoId = parsedPhotoId;
+                    else
+                        Log.Warning($"Invalid photo GUID '{photoOptions.PhotoId}', using default");
+                    if (!string.IsNullOrEmpty(photoOptions.ImageData))
+                    {
+                        try
+                        {
+                            photoComp.ImageData = Convert.FromBase64String(photoOptions.ImageData);
+                        }
+                        catch (FormatException)
+                        {
+                            Log.Warning($"Corrupt base64 image data for photo {photoOptions.PhotoId}, skipping image restore");
+                        }
+                    }
+                    Dirty(inputItemUid, photoComp);
+                }
+                break;
+            // stalker-en-changes-end
+        }
+
+        // stalker-changes: Restore cross-cutting component data (engraving, labels)
+        if (!string.IsNullOrEmpty(nextSpawnOptions?.EngravedMessage) &&
+            TryComp<EngraveableComponent>(inputItemUid, out var engraveComp))
+        {
+            engraveComp.EngravedMessage = nextSpawnOptions.EngravedMessage;
+            Dirty(inputItemUid, engraveComp);
+        }
+
+        if (!string.IsNullOrEmpty(nextSpawnOptions?.CurrentLabel))
+        {
+            // Set directly to avoid double-escaping: CurrentLabel is already escaped from the
+            // original LabelSystem.Label() call, so we must not pass it through Label() again.
+            var labelComp = EnsureComp<LabelComponent>(inputItemUid);
+            labelComp.CurrentLabel = nextSpawnOptions.CurrentLabel;
+            Dirty(inputItemUid, labelComp);
+            _nameModifier.RefreshNameModifiers(inputItemUid);
         }
 
         if (nextSpawnOptions is not PaperItemStalker paperItemStalker)
@@ -661,6 +773,13 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
         RepositoryItemInfo NewRepositoryItemInfo = _stalkerRepositorySystem.GenerateItemInfoByPrototype(protoName);
         NewRepositoryItemInfo.SStorageData = stalkerItem;
         NewRepositoryItemInfo.Identifier = keyIdentifier;
+
+        // stalker-changes: Restore label suffix in the display name for stash UI
+        if (stalkerItem is IItemStalkerStorage { CurrentLabel: { Length: > 0 } label })
+        {
+            NewRepositoryItemInfo.Name = Loc.GetString("comp-label-format",
+                ("baseName", NewRepositoryItemInfo.Name), ("label", label));
+        }
 
         var Count = (int)((IItemStalkerStorage)stalkerItem).CountVendingMachine;
         if (Count < 1)
@@ -852,7 +971,11 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
                         }
                     }
 
-                    newObject = new AmmoContainerStalker(protoName, ammoProtoName, entProtoIds, ammoCount, countVending);
+                    var ammoContainer = new AmmoContainerStalker(protoName, ammoProtoName, entProtoIds, ammoCount, countVending);
+                    // stalker-changes: Restore cross-cutting data not handled by the constructor
+                    ammoContainer.EngravedMessage = node["EngravedMessage"]?.GetValue<string>();
+                    ammoContainer.CurrentLabel = node["CurrentLabel"]?.GetValue<string>();
+                    newObject = ammoContainer;
                     if (newObject != null)
                         playerInventory.AllItems.Add(newObject);
                     break;
@@ -866,6 +989,13 @@ public sealed class StalkerStorageSystem : SharedStalkerStorageSystem
                     if (newObject != null)
                         playerInventory.AllItems.Add(newObject);
                     break;
+                // stalker-en-changes-start
+                case "PhotoItemStalker":
+                    newObject = node.Deserialize<PhotoItemStalker>();
+                    if (newObject != null)
+                        playerInventory.AllItems.Add(newObject);
+                    break;
+                // stalker-en-changes-end
             }
         }
         return playerInventory;
