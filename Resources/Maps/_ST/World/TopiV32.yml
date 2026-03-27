@@ -157264,16 +157264,16 @@ entities:
       anchored: False
       pos: -142.75,-87
       parent: 1
-    - type: LocalTeleport
-      portalName: RenegadeGS
+    - type: LinkByString
+      linkString: RenegadeGS
   - uid: 27135
     components:
     - type: Transform
       anchored: False
       pos: -130,-64.5
       parent: 1
-    - type: LocalTeleport
-      portalName: RenegadeGS
+    - type: LinkByString
+      linkString: RenegadeGS
 - proto: LockerBig
   entities:
   - uid: 27136

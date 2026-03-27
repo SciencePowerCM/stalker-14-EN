@@ -236276,8 +236276,8 @@ entities:
       rot: 3.141592653589793 rad
       pos: 29.5,-37.5
       parent: 1
-    - type: LocalTeleport
-      portalName: Otstup2
+    - type: LinkByString
+      linkString: Otstup2
 - proto: LockerBig
   entities:
   - uid: 3911
@@ -236394,7 +236394,7 @@ entities:
     - type: Transform
       pos: 160.5,70.5
       parent: 1
-- proto: Loshina-Kordon
+- proto: Kordon-Loshina
   entities:
   - uid: 25431
     components:
@@ -299300,7 +299300,7 @@ entities:
     - type: Transform
       pos: 13.5,-47.5
       parent: 1
-- proto: TL-Cordon1
+- proto: Cordon-TL1
   entities:
   - uid: 12245
     components:
