@@ -6,19 +6,25 @@
   - type: STWeight
     self: 3
   - type: Item
-    sprite: _Stalker/Objects/Weapons/Guns/Rifles/m16.rsi
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/m16/inhand.rsi # stalker EN change
   - type: Sprite
-    sprite: _Stalker/Objects/Weapons/Guns/Rifles/m16.rsi
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/m16/icon.rsi # stalker EN change
   - type: Clothing
-    sprite: _Stalker/Objects/Weapons/Guns/Rifles/m16.rsi
+    sprite: _Stalker_EN/Objects/Weapons/Guns/Rifles/m16/inhand.rsi # stalker EN change
   - type: Gun
-    fireRate: 4.5
+    #fireRate: 4.5 stalker EN change
+    fireRate: 6 # stalker EN change
+    burstFireRate: 12 # stalker EN change
+    burstCooldown: 0.25 # stalker EN change
     soundGunshot:
       path: /Audio/_Stalker/Effects/Guns/m4.ogg
       params:
         volume: -2
-    minAngle: 50
-    maxAngle: 100
+    #minAngle: 50 stalker EN change
+    #maxAngle: 100 stalker EN change
+    #angleIncrease: 1 stalker EN change
+    minAngle: 40 # stalker EN change
+    maxAngle: 75 # stalker EN change
     angleIncrease: 1
     selectedMode: Burst
     availableModes:
@@ -41,12 +47,12 @@
         whitelist:
           tags:
           - STWeaponModuleRifleSilencerNato
-      gun_module_scope:
-        name: Scope
-        priority: 2
-        whitelist:
-          tags:
-          - STWeaponModuleRifleScopeNato
+      #gun_module_scope: stalker EN change
+        #name: Scope stalker EN change
+        #priority: 2 stalker EN change
+        #whitelist: stalker EN change
+          #tags: stalker EN change
+          #- STWeaponModuleRifleScopeNato stalker EN change
       gun_chamber:
         name: Chamber
         startingItem:
@@ -62,6 +68,6 @@
 - type: entity
   parent: STBaseWeaponRifleM16
   id: STWeaponRifleM16
-  name: M16
+  name: M16 # stalker EN change
   description: Legendary American rifle from Vietnam era. Appears in the Zone through military depots and black market dealers. Despite its age, remains a formidable weapon in skilled hands.
 

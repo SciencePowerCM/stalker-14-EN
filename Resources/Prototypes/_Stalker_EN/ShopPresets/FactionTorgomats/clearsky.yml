@@ -136,6 +136,7 @@
       StalkerBallBat: 50
       STThrowingknifeYellow: 300
       # Pistols
+      STWeaponPistolHiPower: 400
       STWeaponPistolP99: 500
       STWeaponPistolM1911Chrome: 1000
       STWeaponPistolUSP: 1700
@@ -155,9 +156,9 @@
       # Rifles
       STWeaponRifleL85Forecaster: 2100
       STWeaponRifleFAL: 1500
-      STWeaponRifleM16: 3100
+      STWeaponRifleM4: 3000
       STWeaponRifleM14: 3750
-      STWeaponRifleAKS74: 3500
+      STWeaponRifleAKS74: 2800
       STWeaponRifleAKM: 3500
       STWeaponRifleStalkerAK105SwampThing: 4000
       STMetroWeaponRifleVSV: 5000
@@ -189,6 +190,7 @@
       BizonMag: 750
       BizonMag919: 800
       # Other
+      HiPowerMag13: 120
       P99Mag15: 140
       M1911Mag7: 120
       USPMag12: 200
@@ -280,6 +282,7 @@
       FoodTinMRE: 120
       DrinkLemonadehBottleFull: 50
       STFoodMeatSalami: 350
+      HerculesBottleFull: 200
 
   - name: shop-category-armor
     priority: 6
@@ -340,9 +343,10 @@
       ClothingOuterCoatAugust: 2500
       ClothingOuterCoatAugustM: 3000
       # Gasmasks
-      ClothingMaskGasChN: 100 # T1
-      ClothingMaskGasM40: 400 # T2
-      ClothingMaskGP21: 1000 # T3
+      ClothingMaskGasChN: 500 # T1
+      ClothingMaskGasM40: 1500 # T2
+      ClothingMaskM50: 3800 # T3
+      ClothingMaskGP21: 7500 # T4
 
   - name: shop-category-research-equipment
     priority: 9
@@ -395,21 +399,23 @@
       CasseteSevenRadio: 500
       ClothingHeatBagStalker: 100
       ClothingNeckDogtagLoner: 250
-      STElasticRubberRed: 50
-      STElasticRubberGreen: 50
-      STElasticRubberBlue: 50
+      STElasticRubberRed: 1
+      STElasticRubberGreen: 1
+      STElasticRubberBlue: 1
       FoldedFlagCS: 250
       # Cameras
       STCamera: 750
       STCameraVintage: 1200
       STCameraDamaged: 400
       STCameraFilm: 150
+      STLoggingChainsaw: 1000
 
   - name: shop-category-modules
     priority: 11
     items:
       STModuleScopeRiflesT1Ru: 600
       STModuleScopeRiflesT1Nato: 600
+      STModuleSilencerPistolT1: 400
       STModuleSilencerRiflesT1Ru: 400
       STModuleSilencerRiflesT1Nato: 400
       STModuleShotgunChokeT1: 200
@@ -418,6 +424,7 @@
       STModuleSniperSightT1: 600
       STModuleSilencerSniperT1: 600
       STModuleSilencerRiflesT2Ru: 2800
+      STModuleSilencerPistolT2: 2800
       STModuleSilencerRiflesT2Nato: 2800
       STModuleSilencerSniperT2: 2800
       STModuleSilencerSMGT2: 2800
@@ -442,11 +449,9 @@
       ClothingMaskNeckBalaklava2: 10
       ClothingMaskNeckBalaklava3: 10
       # NECK
+      ClothingBandageStalkerKrest: 10
       ClothingNeckScarfBrown: 100
       ClothingNeckScarfGray: 100
-      ClothingBandageStalkerUk: 10
-      ClothingBandageStalkerRus: 10
-      ClothingBandageStalkerArgentina: 10
       # faction
       ClothingBandageStalkerBlue: 10
       ClothingNeckScarfWhite: 100
@@ -512,3 +517,15 @@
     items:
       DetectorVelesBlueprint: 6500
       DetectorSvarogBlueprint: 20000
+
+  - name: Smokables #explained using D&D lifestyle expenses
+    priority: 14
+    items:
+      CigPackBub: 250 #comfortable
+      CigPackGreen: 150 #poor
+      CigPackRed: 200 #modest
+      CigPackBlue: 150 #poor
+      CigPackBlack: 200 #modest
+      CigPackMixed: 250 #comfortable
+      CigPackMarlboro: 200 #modest
+      CigPackKosmos: 100 #squalid

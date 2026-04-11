@@ -105,13 +105,14 @@
     FoodMeatSTFishFilletCooked: 25
     FoodMeatSTFishSteakCooked: 75
     FoodMeatSTEelCooked: 150
-    STFoodMeatCvarci: 5 # 15 profit per salo baby!
+    STFoodMeatCvarci: 22
     FoodMeatSTRatCooked: 5 # whatever
     FoodMeatSTRatJerked: 10
     FoodMeatSTDogJerkedSingle: 75
     FoodMeatSTBoarJerkedSingle: 125
     FoodMeatSTBearJerkedSingle: 245
     FoodMeatSTSuckerJerkedSingle: 600
+    STFoodMeatSalo: 35
 
 # Cooking
     FoodSTFreshCheese: 100
@@ -273,6 +274,7 @@
         FoodSTRice: 210
         FoodBowlBig: 300
         Spoon: 50
+        HerculesBottleFull: 250
 
     - name: shop-category-armor
       priority: 6
@@ -316,6 +318,8 @@
         STClothingBeltThrowingKnifes: 350
         ClothingBeltPocketPouch: 500
         ClothingBeltHerbalistPouch: 500
+          # Other
+        ClothingBackpackForestryRig: 500
 
     - name: shop-category-raincoats-and-gasmasks
       priority: 8
@@ -333,9 +337,9 @@
         ClothingOuterCoatLoyalistLight: 2500
         ClothingOuterCoatLoyalist: 3000
           # Gasmasks
-        ClothingMaskGasZarya: 90 # T1
-        ClothingMaskGP5: 350 # T2
-        ClothingMaskGP7: 900  # T3
+        ClothingMaskGasZarya: 775 # T1
+        ClothingMaskGasZaryaMono: 775 # T1
+        ClothingMaskGP5: 500 # T1
 
     - name: shop-category-research-equipment
       priority: 9
@@ -411,9 +415,6 @@
         # NECK
         ClothingNeckScarfBrown: 100
         ClothingNeckScarfGray: 100
-        ClothingBandageStalkerUk: 10
-        ClothingBandageStalkerRus: 10
-        ClothingBandageStalkerArgentina: 10
         # TORSO
         ClothingTorsoTShirtPivozavr: 30
         ClothingTorsoTShirtSailorSuit: 30
@@ -494,6 +495,18 @@
         STCookingHrechanyky: 2000
         STCookingKebabMeat: 2000
         STCookingPickledSausage: 2000
+
+    - name: Smokables #explained using D&D lifestyle expenses
+      priority: 14
+      items:
+        CigPackBub: 250 #comfortable
+        CigPackGreen: 150 #poor
+        CigPackRed: 200 #modest
+        CigPackBlue: 150 #poor
+        CigPackBlack: 200 #modest
+        CigPackMixed: 250 #comfortable
+        CigPackMarlboro: 200 #modest
+        CigPackKosmos: 100 #squalid
 
   sponsorCategories:
     SponsorBread:

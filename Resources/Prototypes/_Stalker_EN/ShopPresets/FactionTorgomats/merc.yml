@@ -94,6 +94,7 @@
     MutantPartBurerBrain: 1000
     MutantPartControllerBrain: 2000
 
+
   categories:
     - name: shop-category-weapons
       priority: 1
@@ -203,6 +204,7 @@
         FoodTinMRE: 120
         DrinkLemonadehBottleFull: 50
         STFoodMeatSalami: 350
+        HerculesBottleFull: 200
 
     - name: shop-category-armor
       priority: 6
@@ -254,10 +256,11 @@
         ClothingOuterCoatLoyalist: 3000
         ClothingOuterCoatKevlarMercenaries: 2750
         # Gas Masks
-        ClothingMaskGasZarya: 100
-        ClothingMaskGasMercStalker: 150
-        ClothingMaskGasM40: 250
-        ClothingMaskGP7: 900
+        ClothingMaskGasZarya: 500 # T1
+        ClothingMaskGasMercStalker: 500 # T1
+        ClothingMaskGasM40: 1500 # T2
+        ClothingMaskM50: 3800 # T3
+        ClothingMaskM51: 7500 # T4
 
     - name: shop-category-research-equipment
       priority: 9
@@ -285,9 +288,9 @@
         STRadioHeadset: 150
         ClothingHeatBagStalker: 100
         STSkinsKitMercenary: 500
-        STElasticRubberRed: 50
-        STElasticRubberGreen: 50
-        STElasticRubberBlue: 50
+        STElasticRubberRed: 1
+        STElasticRubberGreen: 1
+        STElasticRubberBlue: 1
         STFlashlightSeclite: 50
         PowerCellHyper: 50
         BoxFlare: 60
@@ -305,6 +308,7 @@
       items:
         STModuleScopeRiflesT1Nato: 600
         STModuleSilencerRiflesT1Nato: 400
+        STModuleSilencerPistolT1: 400
         STModuleSMGGripT1: 600
         STModuleSilencerSMGT1: 600
         STModuleSniperSightT1: 600
@@ -345,10 +349,8 @@
         ClothingMaskNeckBalaklava2: 10
         ClothingMaskNeckBalaklava3: 10
         # NECK
+        ClothingBandageStalkerKrest: 10
         ClothingNeckScarfGray: 100
-        ClothingBandageStalkerUk: 10
-        ClothingBandageStalkerRus: 10
-        ClothingBandageStalkerArgentina: 10
         # faction
         ClothingBandageStalkerMerc: 10
         ClothingNeckMantleMerc: 100
@@ -371,6 +373,8 @@
         ClothingTorsoTurtlenecksMatrosska: 50
         # HANDS
         ClothingHandsGlovesFingerless: 30
+        ClothingHandsGlovesNitrile: 35
+        ClothingHandsGlovesLatex: 35
         ClothingHandsGlovesMercFingerless: 60
         # OUTERCLOTHING
         # CLOAK
@@ -401,3 +405,15 @@
         ClothingShoesBootsMerc: 30
         ClothingShoesSwat: 35
         ClothingShoesBootsCombat: 30
+
+    - name: Smokables #explained using D&D lifestyle expenses
+      priority: 15
+      items:
+        CigPackBub: 250 #comfortable
+        CigPackGreen: 150 #poor
+        CigPackRed: 200 #modest
+        CigPackBlue: 150 #poor
+        CigPackBlack: 200 #modest
+        CigPackMixed: 250 #comfortable
+        CigPackMarlboro: 200 #modest
+        CigPackKosmos: 100 #squalid
