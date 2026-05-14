@@ -160,7 +160,7 @@
     items:
       # Helmets #
       ClothingHeadHelmetSH68: 200 # T1 - PVP
-      ClothingHeadHelmetInfantry: 600 # T2 - PVP
+      ClothingHeadHelmetInfantryMilitary: 600 # T2 - PVP
       ClothingHeadAssaultHelmetMilitary: 1200 # T3 - PVP
       ClothingHeadHelmetBerill5MMilitary: 950 # T2 - PVP
       ClothingHeadHelmetVityaz1C: 2000 # T3 - PVP
@@ -618,6 +618,7 @@
     items:
       STEnergyDrink: 150
       STEnergyDrinkMonster: 150
+      HerculesBottleFull: 200
       STEnergyDrinkRevo: 200
       STDrinkBeerCanBaltic: 90
       DrinkVodkaBottleFull: 55
@@ -638,7 +639,7 @@
     items:
       # Helmets #
       ClothingHeadHelmetSH68: 200 # T1 - PVP
-      ClothingHeadHelmetInfantry: 325 # T2 - PVP
+      ClothingHeadHelmetInfantryMilitary: 325 # T2 - PVP
       ClothingHeadHelmetBerill5MMilitary: 2000 # T3 - PVE
       ClothingHeadHelmetVityaz1C: 2275 # T3 - PVP
       ClothingHeadAssaultHelmetMilitary: 2275 # T3 - PVP
@@ -661,6 +662,7 @@
       ClothingBackpackDuffelBlackStalker: 30 # T1
       ClothingBackpackTacticBlackRadStalker: 450 # T2
       ClothingBackpackMercStalker: 650 # T3
+      ClothingBackpackDuffelCommonStalker: 750 #T3
       ClothingBackpackDuffelBlackMilitaryTacticStalker: 1000 # T4
       ClothingBackpackDuffelBlackTacticStalker: 1000 # T4
       # Belts
@@ -672,6 +674,7 @@
       # Containers
       MedkitCMSStalker: 450 # T1
       MedkitGrizzlyStalker: 850 # T2
+      StalkerGunCaseMilitary: 1400
 
   - name: shop-category-raincoats-and-gasmasks
     priority: 8
@@ -679,8 +682,9 @@
       # Gasmasks
       ClothingMaskGasM40Military: 700 #T2
       ClothingMaskGasXM40: 2200 # T3
-      # Raincoats
-      #ClothingOuterCoatLoyalist: 2500
+      # Raincoats - 50% reduction
+      ClothingOuterCoatDoshdevik: 50
+      ClothingOuterCoatLoyalist: 1500
 
   - name: shop-category-research-equipment
     priority: 9
@@ -907,3 +911,4 @@
       ClothingStalkerNeckToken: 50
       # Eyes
       ClothingEyesGlassesCheapSunglasses: 30
+      ClothingEyesGogglesBerill: 150

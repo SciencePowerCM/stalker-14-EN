@@ -4,8 +4,8 @@ meta:
   engineVersion: 268.0.0
   forkId: ""
   forkVersion: ""
-  time: 04/08/2026 23:44:30
-  entityCount: 25130
+  time: 04/22/2026 23:06:24
+  entityCount: 25132
 maps:
 - 1
 grids:
@@ -103323,7 +103323,7 @@ entities:
       pos: -44.5,180.5
       parent: 1
     - type: Door
-      secondsUntilStateChange: -1548.3198
+      secondsUntilStateChange: -1640.8455
       state: Opening
   - uid: 20960
     components:
@@ -103404,7 +103404,7 @@ entities:
       pos: -57.5,131.5
       parent: 1
     - type: Door
-      secondsUntilStateChange: -406100.34
+      secondsUntilStateChange: -406192.88
       state: Opening
   - uid: 4234
     components:
@@ -103442,7 +103442,7 @@ entities:
       pos: -66.5,125.5
       parent: 1
     - type: Door
-      secondsUntilStateChange: -406109.7
+      secondsUntilStateChange: -406202.22
       state: Opening
   - uid: 4238
     components:
@@ -103541,7 +103541,7 @@ entities:
       pos: -25.5,91.5
       parent: 1
     - type: Door
-      secondsUntilStateChange: -210412.62
+      secondsUntilStateChange: -210505.16
       state: Opening
   - uid: 4253
     components:
@@ -117709,6 +117709,11 @@ entities:
     - type: Transform
       pos: -49.5,207.5
       parent: 1
+  - uid: 21875
+    components:
+    - type: Transform
+      pos: -45.5,178.5
+      parent: 1
 - proto: StalkerExplSafezoneTriggerOut
   entities:
   - uid: 4175
@@ -118371,6 +118376,11 @@ entities:
     components:
     - type: Transform
       pos: -55.5,175.5
+      parent: 1
+  - uid: 21874
+    components:
+    - type: Transform
+      pos: -47.5,178.5
       parent: 1
 - proto: StalkerFenceMetalEnd
   entities:

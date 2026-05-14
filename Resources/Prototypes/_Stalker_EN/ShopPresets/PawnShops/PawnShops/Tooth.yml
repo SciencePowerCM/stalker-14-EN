@@ -226,6 +226,7 @@
       STFoodMeatSalami: 125
       FoodBowlBig: 300
       Spoon: 100
+      DrinkGlass: 150
 
   - name: shop-category-drinks
     priority: 6
@@ -270,7 +271,6 @@
       ClothingBeltPocketPouch: 350
       ClothingBeltHerbalistPouch: 350
       ClothingBeltWebbingHolsterStalkerZarya: 1350
-      ClothingBeltWebbingDoubleStalkerZaryaSmall: 2000
       ClothingBeltCrafterStalker: 4000
 
   - name: shop-category-raincoats-and-gasmasks
@@ -282,6 +282,9 @@
       ClothingOuterCoatStalker: 1000
       ClothingOuterCoatLoyalistLight: 3000
       ClothingOuterCoatLoyalist: 3500
+      ClothingOuterCoatRostokPonchoLoose: 1300 # T2
+      ClothingOuterCoatRostokPonchoRipped: 1300 # T2
+      ClothingOuterCoatRostokPonchoHeavy: 1300 # T2
 
   - name: shop-category-research-equipment
     priority: 10
@@ -438,7 +441,8 @@
     items:
       ToolkitTearOne: 6000
       ToolkitTearTwo: 12000
-      CraftGunpowderBank: 120
+      CraftGunpowderBank: 500
+      CraftMaterialGunpowder: 100
 
   sponsorCategories:
     SponsorBacker:
