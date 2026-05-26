@@ -49,6 +49,7 @@
     # Electrical
     - protoId: ZoneAnomalyElectra
     - protoId: ZoneAnomalyGarland
+    - protoId: ZoneAnomalyClicker
       weight: 1.2
     # Gravity
     - protoId: ZoneAnomalyBurden
@@ -78,6 +79,8 @@
     anomalyEntries:
     # Electrical
     - protoId: ZoneAnomalySource
+      weight: 2
+    - protoId: ZoneAnomalyClicker
       weight: 2
     - protoId: ZoneAnomalyGarland
       weight: 5
@@ -118,6 +121,8 @@
     totalCount: 330
     anomalyEntries:
     # Electrical
+    - protoId: ZoneAnomalyClicker
+      weight: 2
     - protoId: ZoneAnomalySource
       weight: 4
     - protoId: ZoneAnomalyElectra
@@ -177,6 +182,8 @@
     # Electrical
     - protoId: ZoneAnomalyElectra
       weight: 2
+    - protoId: ZoneAnomalyClicker
+      weight: 2
     #-PIVO-UPDATE-
     - protoId: ZoneAnomalyBeer
       weight: 0.4
@@ -198,6 +205,8 @@
     - protoId: ZoneAnomalyElectra
     - protoId: ZoneAnomalyGarland
       weight: 0.55
+    - protoId: ZoneAnomalyClicker
+      weight: 0.35
     # Gravity
     - protoId: ZoneAnomalyNoGravity
       weight: 0.55
@@ -283,6 +292,8 @@
       weight: 0.5
     - protoId: ZoneAnomalyRift
       weight: 0.5
+    - protoId: ZoneAnomalyClicker
+      weight: 0.5
     #-PIVO-UPDATE-
     - protoId: ZoneAnomalyBeer
       weight: 0.5
@@ -303,6 +314,8 @@
       weight: 2
     - protoId: ZoneAnomalyGarland
       weight: 5
+    - protoId: ZoneAnomalyClicker
+      weight: 3
     # Chemical
     - protoId: ZoneAnomalySmoke
       weight: 2
@@ -365,6 +378,7 @@
     - protoId: ZoneAnomalyBarabashka
     - protoId: ZoneAnomalySmoke
     - protoId: ZoneAnomalySource
+    - protoId: ZoneAnomalyClicker
     - protoId: ZoneAnomalyGrabber
     - protoId: ZoneAnomalyWitchesCircle
       weight: 0.4
