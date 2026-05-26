@@ -14,8 +14,8 @@
   description: Accept your fate.
   components:
   - type: Action
-    startDelay: true
-    useDelay: 120
+    #startDelay: true #ST EN change
+    #useDelay: 120 #ST EN change
     icon:
       sprite: Mobs/Ghosts/ghost_human.rsi
       state: icon
@@ -43,8 +43,8 @@
   description: Whisper your last words to anyone nearby, and then succumb to your fate. You only have 30 characters to work with.
   components:
   - type: Action
-    startDelay: true
-    useDelay: 120
+    #startDelay: true #ST EN change
+    useDelay: 30 #ST EN change
     icon:
       sprite: Interface/Actions/actions_crit.rsi
       state: lastwords
