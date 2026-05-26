@@ -45,3 +45,36 @@
         - id: ZoneArtifactBeer
           tier: 1
           ratio: 25
+
+- type: entity
+  id: ZoneAnomalyPoppyField
+  name: Poppy Field
+  parent: ZoneAnomalyBase
+  suffix: Stalker, Poppy Field, Anomaly
+  components:
+    - type: ApproachTrigger
+    - type: IgnorePredictionHit # Stalker EN
+    - type: Clickable
+    - type: InteractionOutline
+    - type: ZoneAnomalyUpdateTriggerCollide
+    - type: Sprite
+      sprite: _Stalker_EN/Objects/Anomalies/poppyfield.rsi
+      layers:
+        - state: idle
+          shader: unshaded
+    - type: ZoneAnomaly
+      detectedLevel: 3
+      preparingDelay: 0
+      activationDelay: 0
+      chargeTime: 0.05
+    - type: SpawnOnApproach
+      minAmount: 4
+      maxAmount: 5
+      maxOffset: 8
+      minOffset: 7
+      cooldown: 5
+      chance: 1
+      prototypes:
+        - STMobPoppyFirefiles
+      restricted:
+        - STMobPoppyFirefiles
