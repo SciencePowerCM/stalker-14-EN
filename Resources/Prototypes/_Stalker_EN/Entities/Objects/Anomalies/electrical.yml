@@ -10,7 +10,7 @@
       detectedLevel: 3
       preparingDelay: 0
       activationDelay: 0.3
-      chargeTime: 5
+      chargeTime: 8
     - type: Sprite
       sprite: _Stalker_EN/Objects/Anomalies/clicker.rsi
       layers:
