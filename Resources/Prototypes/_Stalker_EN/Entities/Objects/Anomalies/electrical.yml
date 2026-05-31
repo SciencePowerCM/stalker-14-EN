@@ -32,6 +32,7 @@
         path: /Audio/_Stalker/Effects/electra_idle.ogg
     - type: ZoneAnomalyEffectFlash
       range: 1
+      duration: 1
     - type: ZoneArtifactSpawner
       artifacts:
         - id: null
